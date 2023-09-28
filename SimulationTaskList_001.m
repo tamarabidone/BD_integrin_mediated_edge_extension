@@ -1,13 +1,13 @@
 % rng('shuffle')  % execute this line if you're adding new simulations after MATLAB was turned off and on.
 clear; 
 clc;
-SaveDirectory = '/uufs/chpc.utah.edu/common/home/u1201504/Desktop/Simulations';    
+SaveDirectory = '/Users/keithcarney/Dropbox/Desktop/University of Utah Work Stuff/Bidone Lab';    
     
    % Setup all combinations of parameters to be varied  -------------------------------------------------------------------
     values = [];
-    nRuns = 3 ; % Total number of runs for each condition
-    k_a = [0.0001 0.001 0.010 1]; % adhesion spring constant
-    peak = [1 2];   % WT or Mn
+    nRuns = 10; % Total number of runs for each condition
+    k_a = [1000,100,10, 1, 0.1, 0.01, 0.001]; % adhesion spring constant
+    peak = [1,2];   % WT or Mn
     nLigands = 100:200:1000;
     
     for m = 1:length(k_a) % Create combinations of all conditions
@@ -21,13 +21,13 @@ SaveDirectory = '/uufs/chpc.utah.edu/common/home/u1201504/Desktop/Simulations';
     end
     % ---------------------------------------------------------------------------------------------------------------------
     
-    
-    for k = 1:size(values,1)
-    %parfor k = 1:size(values,1) 
+    % nProcessors = 5;
+    parfor k = 1:size(values,1)  %(k = 1:size(values,1),nProcessors)
+    %for k = 1:size(values,1)   
             ModelParameters = InitializeModelParameters;  % Initialize Default Model paramaeters
-            ModelParameters.TimeStep = 1e-7;
-            % Special Conditions (or edits to ModelParameters) ==============================================================
-                ModelParameters.TotalSimulationTime = 2; % seconds
+            ModelParameters.TimeStep = 1e-3;
+           % Special Conditions (or edits to ModelParameters) ==============================================================
+                ModelParameters.TotalSimulationTime = 60; % seconds
                 ModelParameters.FilamentThermalMotionOn = false; 
                 ModelParameters.CytoplasmViscosity = 1e5 * 0.0001; % Pascal * seconds
                 ModelParameters.VerticalOffSet = -200;
@@ -40,15 +40,13 @@ SaveDirectory = '/uufs/chpc.utah.edu/common/home/u1201504/Desktop/Simulations';
                 ModelParameters.MolecularClutch_PeakNumber = values(k,2); % Catch bond (1 = WildType or 2 = Manganese)
             % ===============================================================================================================
     
-            SaveName = ['SIMULATION-001__','Ka_',SimFormat(values(k,1)),'__Peak_',sprintf('%02d',values(k,2)),'__nLigands_',sprintf('%04d',values(k,3)),'__run_',sprintf('%02d',values(k,4)),'.mat'];
+            SaveName = ['SIMULATION-001__','Ka_',SimFormat(values(k,1)),'__Peak_',sprintf('%02d',values(k,2)),'__nLigands_',sprintf('%04d',values(k,3)),'__test_run_',sprintf('%02d',values(k,4)),'.mat'];
         
             if ~isfile(fullfile(SaveDirectory,SaveName))  % If code is re-run it will only run values for files not created/completedsimulation yet (so be sure to delete old runs in the same folder)
-            %     disp(SaveName);
+                disp(SaveName);
                 LamellipodiumModel_Bidone01(ModelParameters,SaveDirectory,SaveName); % Run simulation
             end
     end
-    % disp('SIMULATION-001 complete') 
-
-    quit 
+    disp('SIMULATION-001 complete') 
     
     
