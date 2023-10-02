@@ -8,7 +8,7 @@ Running model:
   Also, engage MATLAB parallel processing before running, or comment out line 25 and relace with line 26.
 
 Model output analysis:
-  Assuming model code is run and raw output files are created (i.e. assuming you have run: SimulationTaskList_001.m),
+  Assuming model code is run and raw output files are created (i.e. assuming you have run the script: SimulationTaskList_001.m),
   in Analysis_scripts_varying_spring_constant directory run analyis files in each folder followed by plotting code.
   Adjust raw data file read directory variables when necessary.
   
