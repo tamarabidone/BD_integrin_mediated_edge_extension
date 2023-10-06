@@ -5,7 +5,7 @@ clc
 %This is the folder where we save the outputs from this analysis 
 FileSaveDirectory = '/Users/remisondaz/Desktop/MATLAB/Varying_spring_constant/Actin_retrograde_flow';
 
-%This folder contains raw model output files after running simulations code (for example: SimulationTaskList_001.m)
+%This folder contains output files from the code 
 RawSaveDirectory = '/Users/remisondaz/Desktop/MATLAB/Varying_spring_constant/Raw_files';
 
 
