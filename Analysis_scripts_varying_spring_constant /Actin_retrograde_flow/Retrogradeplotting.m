@@ -2,7 +2,7 @@ clear
 close all
 clc
 
-
+%Defining where the plots generated as output will be saved
 FileSaveDirectory = '/Users/remisondaz/Desktop/MATLAB/Varying_spring_constant/Actin_retrograde_flow';
 
 load(fullfile(FileSaveDirectory, 'ActinFlowresults.mat'));
