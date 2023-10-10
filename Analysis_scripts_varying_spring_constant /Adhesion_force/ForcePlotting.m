@@ -13,6 +13,7 @@ peak = [1 2];
 nligands = 400;
 runs = 3;
 
+%This segment of code will generate histogram plots for the distribution of force on the adhesions at 3 different spring constants.
 % for i = 1:length(peak)
 %     for j = 1:3
 % 
@@ -27,13 +28,13 @@ runs = 3;
 %         ka_large_Adhesion_force = ka_large_Adhesion_force(ka_large_Adhesion_force ~= 0);
 % 
 %         if r == 1 
-%             Small_force_per_run = ka_small_Adhesion_force;
-%             Medium_force_per_run = ka_medium_Adhesion_force; 
-%             Large_force_per_run = ka_large_Adhesion_force;
+%             Small_k_a = ka_small_Adhesion_force;
+%             Medium_k_a = ka_medium_Adhesion_force; 
+%             Large_k_a = ka_large_Adhesion_force;
 %         else
-%             Small_force_per_run(end+1:end+length(ka_small_Adhesion_force)) = ka_small_Adhesion_force;
-%             Medium_force_per_run(end+1:end+length(ka_medium_Adhesion_force)) = ka_medium_Adhesion_force;
-%             Large_force_per_run(end+1:end+length(ka_large_Adhesion_force)) = ka_large_Adhesion_force;
+%             Small_k_a(end+1:end+length(ka_small_Adhesion_force)) = ka_small_Adhesion_force;
+%             Medium_k_a(end+1:end+length(ka_medium_Adhesion_force)) = ka_medium_Adhesion_force;
+%             Large_k_a(end+1:end+length(ka_large_Adhesion_force)) = ka_large_Adhesion_force;
 %         end
 % 
 %         clear ka_small_Adhesion_force
@@ -42,9 +43,9 @@ runs = 3;
 % 
 %         end
 % 
-%         [counts1, binCenters1] = histcounts(Small_force_per_run, 20);
-%         [counts2, binCenters2] = histcounts(Medium_force_per_run, 20);
-%         [counts3, binCenters3] = histcounts(Large_force_per_run, 20);
+%         [counts1, binCenters1] = histcounts(Small_k_a, 20);
+%         [counts2, binCenters2] = histcounts(Medium_k_a, 20);
+%         [counts3, binCenters3] = histcounts(Large_k_a, 20);
 % 
 %         figure;
 %         plot(binCenters1(1:end-1), counts1, 'r-', 'LineWidth',3);
@@ -66,6 +67,8 @@ runs = 3;
 %     end
 % end
 
+
+%This segment of code is concatenating the 3 repetitions for each spring constant used, and then calculating the mean and standard deviation of the force on the adhesions
 for i = 1:length(k_a)
     for j = 1:length(peak)
 
@@ -78,10 +81,10 @@ for i = 1:length(k_a)
         
         if r == 1 
 
-            Adhesion_force_per_run = Adhesion_f;
+            Adhesion_force = Adhesion_f;
            
         else
-            Adhesion_force_per_run(end+1:end+length(Adhesion_f)) = Adhesion_f;
+            Adhesion_force(end+1:end+length(Adhesion_f)) = Adhesion_f;
            
         end
 
@@ -89,11 +92,13 @@ for i = 1:length(k_a)
         
           end
 
-        Mean_Force(i,j) = mean(Adhesion_force_per_run);
-        STD(i,j) = std(Adhesion_force_per_run)/sqrt(length(Adhesion_force_per_run));
+        Mean_Force(i,j) = mean(Adhesion_force);
+        STD(i,j) = std(Adhesion_force)/sqrt(length(Adhesion_force));
 
     end
 end
+
+%This segment is generating a figure that plots the Average Force on the adhesions at 5 different spring constants that were used for the analysis.
 
  % f = figure(2);
  %        f.Color = 'white';
@@ -115,6 +120,7 @@ end
  %        print('MeanIntegrinforce_vs_spring_constant', '-dpng', '-r400')
 
 
+%This segment is generating a figure that plots the standard deviation of the Force on the adhesions at 5 different spring constants that were used for the analysis.
 
  r = figure(3);
     r.Color = 'white';
