@@ -40,7 +40,7 @@ time_max= 29;
                 active_integrins_force=(integrin_force.*activation);
 
                 
-
+%Create a struct containing the force on the adhesions at varying substrate stiffness conditions
                  Forceresults.(['k_a_', SimFormat(k_a(k)), '_peak_', sprintf('%01d',peak(n)), '_nligands_', sprintf('%03d', nligands(m)), 'run_', sprintf('%02d',r)]) = struct(...
         'Adhesion_force', active_integrins_force);
 
@@ -49,6 +49,7 @@ time_max= 29;
         end
   end
 
+%Saving the struct in a .mat file located in the directory specified at the beginning of the code
     save(fullfile(FileSaveDirectory, 'IntegrinForceresults.mat'), 'Forceresults');
   
 
