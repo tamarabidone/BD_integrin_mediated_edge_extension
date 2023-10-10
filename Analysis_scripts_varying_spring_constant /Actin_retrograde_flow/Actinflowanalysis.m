@@ -52,7 +52,7 @@ time_max= 29;
                   end
                  end
                 
-
+%Creating a struct with the Adhesion Force and retrograde flow of the FAL connections
                  Flowresults.(['k_a_', SimFormat(k_a(k)), '_peak_', sprintf('%01d',peak(n)), '_nligands_', sprintf('%03d', nligands(m)), 'run_', sprintf('%02d',r)]) = struct(...
         'Adhesion_force', force, ...
         'Retrograde_flow', retrograde_flow);
@@ -63,5 +63,5 @@ time_max= 29;
         end
   end
   
-
+%Saving the struct as a .mat file in the FileSaveDirectory defined at the beginning of the code
     save(fullfile(FileSaveDirectory, 'ActinFlowresults.mat'), 'Flowresults');
