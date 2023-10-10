@@ -62,6 +62,7 @@ runs = 3;
 %         % axis([0 1200 0 200])
 %         % f.Position = [655 234 650 530];
 %         %axis square
+%         %Saving the plots to the designated folder specified by FileSaveDirectory
 %         print(['Integrinforce_', 'k_a_', SimFormat(k_a(j)), '_vs_' 'k_a_', SimFormat(k_a(j+1)), '_vs_' 'k_a_', SimFormat(k_a(j+2)) '_peak_', num2str(peak(i))], '-dpng', '-r400')
 % 
 %     end
