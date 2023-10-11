@@ -48,6 +48,7 @@ time_max= 29;
         end
   end
 
+%Saving the struct containing the position of the adhesions in a .mat file in the directory specified at the beginning code
     save(fullfile(FileSaveDirectory, 'IntegrinPositionresults.mat'), 'Positionresults');
   
 
