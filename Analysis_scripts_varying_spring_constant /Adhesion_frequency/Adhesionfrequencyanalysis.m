@@ -28,7 +28,7 @@ time_max= 29;
                 load(fullfile(RawSaveDirectory, SaveName));
                 
                     Active_integrin_frequency = SimData.nAdhesions;
-
+                %Creating a struct which will store the information about the frequency of active integrins throughout the simulation
                      Frequencyresults.(['k_a_', SimFormat(k_a(k)), '_peak_', sprintf('%01d',peak(n)), '_nligands_', sprintf('%03d', nligands(m)), 'run_', sprintf('%02d',r)]) = struct(...
         'Active_integrin_frequency', Active_integrin_frequency);
 
@@ -37,6 +37,7 @@ time_max= 29;
         end
   end
 
+%Saving the struct in a .mat file in the designated path specified at the start of the code
   save(fullfile(FileSaveDirectory, 'AdhesionFrequencyresults.mat'), 'Frequencyresults');
 
 
