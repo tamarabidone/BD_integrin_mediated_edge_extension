@@ -2,9 +2,10 @@ clear
 close all
 clc
 
-
+%This is the folder where we save the outputs from this analysis 
 FileSaveDirectory = '/Users/remisondaz/Desktop/MATLAB/Varying_spring_constant/Adhesion_frequency';
 
+%This folder contains raw model output files after running simulations code (for example: SimulationTaskList_001.m)
 load(fullfile(FileSaveDirectory, 'AdhesionFrequencyresults.mat'));
 
 
@@ -13,6 +14,7 @@ peak = [1 2];
 nligands = 400;
 runs = 3;
 
+%Concatenating the three runs using the same substrate stiffness
 for i = 1:length(k_a)
     for j = 1:length(peak)
 
@@ -22,11 +24,11 @@ for i = 1:length(k_a)
         
            if r==1
 
-      Actin_freq_per_run = Actin_f_per_run;
+      Actin_freq = Actin_f_per_run;
       
 
             else
-                Actin_freq_per_run(end+1:end+length(Actin_f_per_run))=Actin_f_per_run;
+                Actin_freq(end+1:end+length(Actin_f_per_run))=Actin_f_per_run;
                
             end
 
@@ -34,12 +36,13 @@ for i = 1:length(k_a)
 
         end
 
-        Frequency(i,j) = mean(Actin_freq_per_run);
-        STD(i,j) = std(Actin_freq_per_run);
+        Frequency(i,j) = mean(Actin_freq);
+        STD(i,j) = std(Actin_freq);
 
     end
 end
 
+%This segment of code will generate a figure plotting the average frequency of active integrins over the 30 simulation time for the different substrate stiffnesses
         
        f = figure(1);
         f.Color = 'white';
