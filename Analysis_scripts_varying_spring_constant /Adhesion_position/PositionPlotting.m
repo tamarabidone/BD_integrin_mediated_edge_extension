@@ -86,13 +86,13 @@ runs = 3;
 %         ka_large_Adhesion_position = ka_large_Adhesion_position(ka_large_Adhesion_position ~= 0);
 % 
 %         if r == 1
-%             Small_position_per_run = ka_small_Adhesion_position;
-%             Large_position_per_run = ka_large_Adhesion_position;
+%             Small_position = ka_small_Adhesion_position;
+%             Large_position = ka_large_Adhesion_position;
 % 
 %         else
 % 
-%             Small_position_per_run(end+1:end+length(ka_small_Adhesion_position)) = ka_small_Adhesion_position;
-%             Large_position_per_run(end+1:end+length(ka_large_Adhesion_position)) = ka_large_Adhesion_position;
+%             Small_position(end+1:end+length(ka_small_Adhesion_position)) = ka_small_Adhesion_position;
+%             Large_position(end+1:end+length(ka_large_Adhesion_position)) = ka_large_Adhesion_position;
 %         end
 % 
 %         clear ka_small_Adhesion_position
@@ -101,8 +101,8 @@ runs = 3;
 %         end
 % 
 % 
-%         [counts1, binCenters1] = histcounts(Small_position_per_run, 20);
-%         [counts3, binCenters3] = histcounts(Large_position_per_run, 20);
+%         [counts1, binCenters1] = histcounts(Small_position, 20);
+%         [counts3, binCenters3] = histcounts(Large_position, 20);
 % 
 %         figure;
 %         plot(binCenters1(1:end-1), counts1, 'r-', 'LineWidth',3);
@@ -136,13 +136,13 @@ runs = 3;
 %         ka_large_Adhesion_position = ka_large_Adhesion_position(ka_large_Adhesion_position ~= 0);
 % 
 %         if r == 1
-%             Small_position_per_run = ka_small_Adhesion_position;
-%             Large_position_per_run = ka_large_Adhesion_position;
+%             Small_position = ka_small_Adhesion_position;
+%             Large_position = ka_large_Adhesion_position;
 % 
 %         else
 % 
-%             Small_position_per_run(end+1:end+length(ka_small_Adhesion_position)) = ka_small_Adhesion_position;
-%             Large_position_per_run(end+1:end+length(ka_large_Adhesion_position)) = ka_large_Adhesion_position;
+%             Small_position(end+1:end+length(ka_small_Adhesion_position)) = ka_small_Adhesion_position;
+%             Large_position(end+1:end+length(ka_large_Adhesion_position)) = ka_large_Adhesion_position;
 %         end
 % 
 %         clear ka_small_Adhesion_position
@@ -151,8 +151,8 @@ runs = 3;
 %         end
 % 
 % 
-%         [counts1, binCenters1] = histcounts(Small_position_per_run, 20);
-%         [counts3, binCenters3] = histcounts(Large_position_per_run, 20);
+%         [counts1, binCenters1] = histcounts(Small_position, 20);
+%         [counts3, binCenters3] = histcounts(Large_position, 20);
 % 
 %         figure;
 %         plot(binCenters1(1:end-1), counts1, 'r-', 'LineWidth',3);
@@ -187,13 +187,13 @@ runs = 3;
 %         ka_large_Adhesion_position = ka_large_Adhesion_position(ka_large_Adhesion_position ~= 0);
 % 
 %         if r == 1
-%             Small_position_per_run = ka_small_Adhesion_position;
-%             Large_position_per_run = ka_large_Adhesion_position;
+%             Small_position = ka_small_Adhesion_position;
+%             Large_position = ka_large_Adhesion_position;
 % 
 %         else
 % 
-%             Small_position_per_run(end+1:end+length(ka_small_Adhesion_position)) = ka_small_Adhesion_position;
-%             Large_position_per_run(end+1:end+length(ka_large_Adhesion_position)) = ka_large_Adhesion_position;
+%             Small_position(end+1:end+length(ka_small_Adhesion_position)) = ka_small_Adhesion_position;
+%             Large_position(end+1:end+length(ka_large_Adhesion_position)) = ka_large_Adhesion_position;
 %         end
 % 
 %         clear ka_small_Adhesion_position
@@ -202,8 +202,8 @@ runs = 3;
 %         end
 % 
 % 
-%         [counts1, binCenters1] = histcounts(Small_position_per_run, 20);
-%         [counts3, binCenters3] = histcounts(Large_position_per_run, 20);
+%         [counts1, binCenters1] = histcounts(Small_position, 20);
+%         [counts3, binCenters3] = histcounts(Large_position, 20);
 % 
 %         figure;
 %         plot(binCenters1(1:end-1), counts1, 'r-', 'LineWidth',3);
