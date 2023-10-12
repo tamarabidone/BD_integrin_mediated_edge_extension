@@ -2,7 +2,7 @@ clear
 close all
 clc
 
-
+%This is the folder where we save the outputs from this analysis 
 FileSaveDirectory = '/Users/remisondaz/Desktop/MATLAB/Varying_spring_constant/Force_active_integrins';
 
 load(fullfile(FileSaveDirectory, 'Activeintegrinsforce.mat'));
@@ -13,6 +13,7 @@ peak = [1 2];
 nligands = 400;
 runs = 3;
 
+%This segment of code will generate figures plotting the distribution of force distributions for different spring constants. One plot will be generated per spring constant that was analyzed
 Total_force = NaN(4, 16000);
 
 for i = 1:length(peak)
@@ -53,7 +54,7 @@ for i = 1:length(peak)
 end
 
 
-bx=boxplot(Total_force','Notch','on', 'symbol', ' ');%,'MarkerStyle','none','Orientation', 'vertical');
+bx=boxplot(Total_force,'Notch','on', 'symbol', ' ');%,'MarkerStyle','none','Orientation', 'vertical');
 axis([0 5 0 5])
 
 % bc.BoxFaceColor=[0.0 0.0 0.8];
