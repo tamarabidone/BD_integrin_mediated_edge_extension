@@ -15,7 +15,7 @@ nligands = 400;
 runs = 3;
 
 %Comparing three successive spring constant to see how the position of
-%adhesion varies
+%adhesion varies. This segment will generate figures plotting histograms for the dirstibution of adhesions positions in the model over the 30 seconds for three successive spring constants.
 
 % for i = 1:length(peak)
 %     for j = 1:3
@@ -71,7 +71,7 @@ runs = 3;
 %     end
 % end
 
-%Comparing two successive spring constants to see how the position difffers
+%Comparing two successive spring constants to see how the position difffers. This segment of code will generate histograms of the distribution of adhesions positions from the leading edge for two successive spring constants.
 
 % for i = 1:length(peak)
 %     for j = 1:3
@@ -120,8 +120,7 @@ runs = 3;
 %     end
 % end
 
-% Comparing a difference of 3 in spring constants to see how the position
-% varies with larger changes in spring constant
+% Similarly, this segment of code will generate figures that plot the histograms of adhesion position distribution for bigger differences in spring constants. For instance here we will be comparing differences of 3 in the list of 5 spring constants
 
 % for i = 1:length(peak)
 %     for j = 1:2
@@ -172,7 +171,7 @@ runs = 3;
 
 
  % Comparing a difference of 4 in spring constants to see how the position
-%  varies with extreme differences in spring constant
+%  varies with extreme differences in spring constant. This will generate figures containing plots of adhesion position distribution in the more extreme case, the softest substrate and the stiffest substrate
 
 % for i = 1:length(peak)
 %     for j = 1
@@ -222,7 +221,7 @@ runs = 3;
 % end
 
 
-
+%This segment of code will concatenate the position from the 3 runs and then compute the average position of the adhesions for each spring constant, and then generate a figure plotting the average adhesion position for the different spring constants. It will also generate a plot comparing the STD of all adhesion positions for the 5 spring constants
 
 for i = 1:length(k_a)
     for j = 1:length(peak)
