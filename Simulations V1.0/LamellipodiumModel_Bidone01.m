@@ -45,7 +45,7 @@ function LamellipodiumModel_Bidone01(ModelParameters,SaveDir,SaveName)
                 [Adhesions, Ligands, FALconnections] = ManageAdhesionsAndLigands(Filaments,Adhesions,Ligands,FALconnections,Membrane,ModelParameters);    
                 
                 % Calculate speed, mass, and add random filament if necessarry ---------------------------------------------
-                if rem( round(t,10), 0.001) == 0 % Only record in 1 ms intervals
+                if rem( round(t,10), 0.1) == 0 % Only record in 1 ms intervals
                     index = index + 1;
                     Data.Timepoint  = t;
                     DATA{index,1}   = Data; % Data contains retrograde flow values for all filaments at each timepoint
