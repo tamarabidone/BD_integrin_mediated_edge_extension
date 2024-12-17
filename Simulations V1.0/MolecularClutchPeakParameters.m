@@ -4,7 +4,7 @@ function [A,B,C,D] = MolecularClutchPeakParameters(PeakNumber)
     % k_off =  A*exp(B*ConnectionTension) + C*exp(D*ConnectionTension);
     
         switch PeakNumber
-              case 1 % Peak 1 (Tau_max = 3 2)
+            case 1 % Peak 1 (Tau_max = 3 2)
                 A =  2;
                 B = -0.064;
                 C =  0.0005;
