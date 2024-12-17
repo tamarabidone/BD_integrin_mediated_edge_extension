@@ -185,4 +185,3 @@ function PolymCoeff = CalculatePolymerizationCoefficient(f,Filaments,Membrane,Mo
             PolymCoeff = P_top./P_bot;
             PolymCoeff( isinf(PolymCoeff) | isnan(PolymCoeff) ) = 0;
 end
-
