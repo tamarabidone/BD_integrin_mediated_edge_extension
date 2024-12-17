@@ -8,7 +8,7 @@ ModelParameters = InitializeModelParameters;  % Initialize Model paramaeters
     ModelParameters.CytoplasmViscosity = 1e5 * 0.0001; % Pascal * seconds
     ModelParameters.VerticalOffSet = -200;
     ModelParameters.StartingNumberOfFilaments = 32; % This is a ballpark value based on MaximumFilamentMass
-    ModelParameters.AdhesionSpringConstant = 0.01; % Change (substrate rigidity)
+    ModelParameters.AdhesionSpringConstant = 0.0001; % Change (substrate rigidity)
     ModelParameters.k_off_pointed = 7; % s^-1
     ModelParameters.k_branch = 2.2; % s^-1
     ModelParameters.FAL_connection_Distance = 10*2.75; % nm
@@ -51,12 +51,12 @@ ModelParameters = InitializeModelParameters;  % Initialize Model paramaeters
 
 %% START Movie
 
-MovieDirectory = '/Users/remisondaz/Desktop/MATLAB/Movies/ExtendedWTSoftFig5';
-v = VideoWriter( fullfile(MovieDirectory, 'Movie01.mp4'), 'MPEG-4');
+MovieDirectory = '/uufs/chpc.utah.edu/common/home/bidone-group3/Remi/Soft_WT_fig5';
+v = VideoWriter(fullfile(MovieDirectory, 'Movie01.avi'), 'Motion JPEG AVI');
 v.Quality = 95;
 v.FrameRate = 10; %Frames per second
 open(v)
-MovieIdx = 0;      
+MovieIdx = 0;   
 
 
 %% START Model 
@@ -70,7 +70,8 @@ MovieIdx = 0;
                 [Adhesions, Ligands, FALconnections] = ManageAdhesionsAndLigands(Filaments,Adhesions,Ligands,FALconnections,Membrane,ModelParameters);    
                 
                 % Calculate speed, mass, and add random filament if necessarry ---------------------------------------------
-                if rem( round(t, 10),0.1) == 0 % Only record in 1ms intervals
+                if rem( round(t,10),0.1) == 0 % Only record in 1ms intervals
+                    disp(t)
                     index = index + 1;
                     Data.Timepoint  = t;
                     DATA{index,1}   = Data; % Data contains retrograde flow values for all filaments at each timepoint
@@ -90,42 +91,21 @@ MovieIdx = 0;
                 %[Filaments] = AddRandomFilaments(Filaments,Membrane,ModelParameters,nMono(index,1)); % If neccesary add a new filament
                 
                 % Create plot ----------------------------------------------------------------------------------------------
-                if ShowPlot 
+                if ShowPlot
                     MovieIdx = MovieIdx + 1;
                     %[FALconnections,count] = PlotFilamentsAndMembrane(nth,count,Filaments,Membrane,Adhesions,Ligands,FALconnections,FH,AH1,AH2,AH3,t,nMono,nAdhes,MemVel,index,TV2,ModelParameters);
-                    if (count >= nth) || isequal(t,0)
-                        count = 0;
-                        [FALconnections,count] = PlotFilamentsAndMembraneMovie01(nth,count,Filaments,Membrane,Adhesions,Ligands,FALconnections,FH,AH1,AH2,AH3,t,nMono,nAdhes,MemVel,index,TV2,ModelParameters, Data);
-                        Fimage = getframe(FH);
-                        writeVideo(v,Fimage.cdata)
-                        % imwrite( Fimage.cdata, fullfile(MovieDirectory,['Frame_',sprintf('%06d',MovieIdx),'.tif']) )
-                    end
+                    [FALconnections,count] = PlotFilamentsAndMembraneMovie01(nth,count,Filaments,Membrane,Adhesions,Ligands,FALconnections,FH,AH1,AH2,AH3,t,nMono,nAdhes,MemVel,index,TV2,ModelParameters);
+                    Fimage = getframe(FH);
+                    writeVideo(v,Fimage.cdata)
+                    %imwrite( Fimage.cdata, fullfile(MovieDirectory,['Frame_',sprintf('%06d',MovieIdx),'.tif']) )
                 end
                 
-                % if round(t,10) == 1
-                %     savefig(FH, fullfile(MovieDirectory,"Snapshot_t01.fig")) 
-                % elseif round(t,10) == 5
-                %     savefig(FH, fullfile(MovieDirectory,"Snapshot_t05.fig"))
-                % elseif round(t,10) == 7.5
-                %     savefig(FH, fullfile(MovieDirectory,"Snapshot_t075.fig"))
-                if round(t,10) == 10
-                    savefig(FH, fullfile(MovieDirectory,"Snapshot_t010.fig")) 
+                if round(t,10) == 0.5
+                    disp('pause')
+                elseif round(t,10) == 10
+                    disp('pause')
                 elseif round(t,10) == 20
-                    savefig(FH, fullfile(MovieDirectory,"Snapshot_t020.fig")) 
-                elseif round(t,10) == 30
-                    savefig(FH, fullfile(MovieDirectory,"Snapshot_t030.fig")) 
-                elseif round(t,10) == 35
-                    savefig(FH, fullfile(MovieDirectory,"Snapshot_t035.fig")) 
-                elseif round(t,10) == 40
-                    savefig(FH, fullfile(MovieDirectory,"Snapshot_t040.fig"))
-                elseif round(t,10) == 42.5
-                    savefig(FH, fullfile(MovieDirectory,"Snapshot_t042.5.fig")) 
-                elseif round(t,10) == 45
-                    savefig(FH, fullfile(MovieDirectory,"Snapshot_t045.fig"))
-                elseif round(t,10) == 47.5
-                    savefig(FH, fullfile(MovieDirectory,"Snapshot_t047.5.fig")) 
-                elseif round(t,10) == 50
-                    savefig(FH, fullfile(MovieDirectory,"Snapshot_t050.fig")) 
+                    disp('pause')
                 end
 
                 count = count + 1;
@@ -136,7 +116,7 @@ MovieIdx = 0;
 %% END Model 
 
 
-close(v)
+% close(v)
 
 
 
@@ -144,5 +124,3 @@ close(v)
     %% catch
        %%  disp(['File not saved: ',SaveName])
     %% end
-
-
