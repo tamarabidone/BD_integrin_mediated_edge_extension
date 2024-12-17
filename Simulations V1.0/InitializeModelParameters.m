@@ -62,4 +62,7 @@ function ModelParameters = InitializeModelParameters
         ModelParameters.PersistenceLength = 1000; % (nm) Persistence length of actin filament (17.7 um)
         
         
+
+        
+        
            
