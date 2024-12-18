@@ -2,7 +2,8 @@ clc
 clear
 close all
 
-RawSaveDirectory = '/Users/remisondaz/Desktop/MATLAB/Extended_Sims';
+RawSaveDirectory = ' _____ '; %Insert directory to folder containing raw files here
+
 
 % nRuns = 3;
 % k_a = [0.0001 0.001 0.01];
