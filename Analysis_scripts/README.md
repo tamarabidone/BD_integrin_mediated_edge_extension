@@ -1,2 +1,1 @@
-This folder contains analysis files that can be used to reproduce the plots that were generated for the manuscipt. Each file contains
-a line in the code reffering to the directory where the output files are located.
+This folder contains analysis files that can be used to reproduce the plots that were generated for the manuscipt. The user should replace directory line on line 5 of the scripts to refer to the directory where the output files generated from SimulationTaskList001.m are saved. Here, the output files from the simulations are contained in the folder 'Output_files'.
