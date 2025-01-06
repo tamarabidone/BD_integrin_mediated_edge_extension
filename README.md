@@ -77,6 +77,104 @@ RUNNING MODEL:
     Membrane Geometry: The membrane is described by a set of nodes and segments, and the branching window is a region near the membrane where      branching is allowed.
     This structure provides a simulation of filament dynamics, allowing the study of polymerization, depolymerization, and branching processes     in a simulated environment with adjustable parameters for the system.
 
+    CreateFALconnections.m : establishes connections between filaments, integrins, and ligands based on spatial proximity and activation          probabilities. Here's a detailed breakdown of its key components:
+
+      These connections, called FAL connections (Filament-Adhesion-Ligand connections), represent interactions that may influence the     
+      dynamics of filament growth and cell adhesion.
+      
+      Input Arguments:
+      FALconnections: Contains existing connections between filaments, adhesions, and ligands.
+      Filaments: Contains information about the filaments, including their coordinates (XYCoords), names, and monomer indices.
+      Adhesions: Contains information about the adhesions, including their coordinates (XYpoints).
+      Ligands: Contains information about the ligands, including their coordinates (XYpoints).
+      ModelParameters: Contains model parameters such as the connection distance (FAL_connection_Distance), monomer length, and adhesion 
+      activation rate.
+      
+      Loop Over Filaments: For each filament, the code calculates the distances between the filament's monomers and the adhesions, as well as 
+      between the adhesions and ligands.
+      XY_filament: Coordinates of the filament's monomers.
+      XY_adhesions: Coordinates of adhesions that are not yet connected to a filament or ligand.
+      XY_ligands: Coordinates of ligands that are not yet connected to an adhesion.
+      
+      Distance Calculation: The function calculates the Euclidean distance from each adhesion to the filament monomers (Distance_AF) and from 
+      each adhesion to the ligands (Distance_AL).
+      
+      Find Minimum Distances: For each adhesion, it finds the nearest filament monomer and the nearest ligand. This is done by identifying 
+      the minimum distance between the adhesion and all monomers, as well as the minimum distance between the adhesion and all ligands.
+      
+      Filter Connections Based on Distance: Only connections where the distance is less than or equal to the predefined connection distance 
+      (D) are considered. This ensures that only the adhesions within range of a filament and ligand can potentially connect.
+      
+      Probability of Connection: For each valid connection (adhesion-filament-ligand triplet), the probability of the connection forming is 
+      calculated using an exponential decay based on the adhesion activation rate and the simulation time step.
+      p_on: The probability that a connection will occur at the current time step.
+      
+      Create FAL Connections: If the connection is activated (based on the calculated probability), a new FAL connection is established by 
+      adding the connection details to the FALconnections structure.
+      Additionally, the adhesion and ligand structures are updated to reflect the new connection:
+      The adhesion is marked as attached to the filament, and its position is updated to the position of the ligand.
+      The ligand is marked as attached to the filament and the specific adhesion.
+      Output: The updated FALconnections, Adhesions, and Ligands structures are returned, reflecting the newly established connections.
+
+    CalculatePositionAfterAppliedForces.m : Filament Motion Section:
+
+      Filament structures are calculated by finding the tips of each filament and calculating the forces acting on them (due to adhesion, 
+      membrane, and Brownian motion).
+      Forces due to connections between the filaments and adhesions are computed using CalculateForceDueToFALconnections.
+      The motion of the filaments is updated according to these forces, using a model of random fluid motion (Brownian motion).
+      Membrane Motion Section:
+      
+      This section calculates the force exerted by the filaments on the membrane. The membrane's movement is then computed based on the total 
+      force.
+      
+      Adhesion Motion Section: Adhesions that are not yet activated undergo Brownian motion, where their positions are updated based on 
+      random forces.
+      
+      Sub-functions: 
+      TotalForceExertedByMembraneOnFilamentStructure: Calculates the normal force exerted by the membrane on the filament structure.
+      CalculateForceFromFilamentsHittingMembraneSegment: Calculates the total force from all filaments interacting with the membrane.
+      CalculateForceDueToFALconnections: Calculates the forces between filaments and adhesions (via Focal Adhesion-Ligand (FAL) connections), 
+      including molecular clutch deactivation based on tension.
+      Parameters Involved:
+      ModelParameters: Contains constants such as CytoplasmViscosity, kT (Boltzmann constant), PersistenceLength, and adhesion-related 
+      parameters.
+      Filaments: Contains the information about filament names, positions, unit vectors, and lengths.
+      Adhesions: Stores information about adhesion sites and their active status.
+      Ligands: Stores ligand-related data for adhesion interactions.
+      FALconnections: Stores information about the connections between filaments and adhesions.
+      Membrane: Contains membrane properties, including its position and boundary conditions.
+
+      Force Calculations:
+      Forces acting on filaments from adhesions (FAx, FAy).
+      Forces exerted by the membrane on filaments (Fm).
+      Forces due to Brownian motion are included in the filament's movement.
+      
+      Thermal Motion:
+      If enabled, thermal motion is added to the filament motion using random Gaussian noise scaled by the diffusion coefficient.
+      
+      Molecular Clutch: 
+      The code implements a molecular clutch mechanism, where adhesion connections can break based on a tension-dependent rate (k_off), which 
+      is modeled using exponential decay.
+      
+      Boundary Conditions: The code checks if any filament tips go out of bounds (left or right of the membrane) and applies periodic 
+      boundary conditions by shifting the filaments to the opposite side.
+
+  `ManageAdhesionsAndLigands.m : Performs periodic boundary conditions for adhesion and ligand points. The periodic boundary conditions 
+     ensure that if the coordinates of adhesions or ligands fall outside the defined region of the membrane (based on RegionNodes), they are 
+     wrapped around to the opposite side, effectively creating a continuous system.
+
+    Key Operations:
+      Adhesion Handling: For each boundary (top, bottom, left, right), if adhesion points move outside the defined region, their positions 
+      are adjusted by adding or subtracting ModelDepth or MembraneWidth (depending on the boundary). Then, the function checks whether the 
+      adhesion point is connected to any filament or ligand. If so, the connection is removed by calling the DeleteFALconnection function.
+
+    Ligand Handling: Similar to the adhesion section, ligands are handled with periodic boundary conditions, and their connections to 
+      filaments or adhesions are removed if they go out of bounds.
+
+    Helper Function (DeleteFALconnection): This function is used to delete connections between filaments, adhesions, and ligands whenever an 
+      adhesion or ligand moves across the boundary.
+
+  CountTotalMonomers.m : Counts the total number of monomers across all filaments. Here's a breakdown of the function:
 
 
 MODEL OUTPUT ANALYSIS:
