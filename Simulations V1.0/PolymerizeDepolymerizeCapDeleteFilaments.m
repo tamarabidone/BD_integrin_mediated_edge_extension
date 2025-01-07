@@ -1,4 +1,4 @@
-function [Filaments,Adhesions,Ligands,FALconnections] = PolymerizeDepolymerizeCapDeleteFilaments(nMonomers,Filaments,Adhesions,Ligands,Membrane,FALconnections,ModelParameters)
+function [Filaments,Integrins,Ligands,FILconnections] = PolymerizeDepolymerizeCapDeleteFilaments(nMonomers,Filaments,Integrins,Ligands,Membrane,FILconnections,ModelParameters)
     %
     % Filaments = PolymerizeDepolymerizeCapDeleteFilaments(Filaments,ModelParamters)
     %
@@ -86,9 +86,9 @@ function [Filaments,Adhesions,Ligands,FALconnections] = PolymerizeDepolymerizeCa
                         % START: Remove monomer ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
                             Filaments.MonomerIndices{f} = Filaments.MonomerIndices{f}(2:end,1);
                             Filaments.XYCoords{f} = Filaments.XYCoords{f}(2:end,:);
-                            % Check if adhesion/ligand is attached at this monomer on this filament. If so delete connection.
+                            % Check if integrin/ligand is attached at this monomer on this filament. If so delete connection.
                             Value = [Filaments.Name(f,1),MonomerIndex];
-                            [Filaments,Adhesions,Ligands,FALconnections] = DeleteFALconnection('FilamentNameAndMonomerIndex',Value,Filaments,Adhesions,Ligands,FALconnections);
+                            [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection('FilamentNameAndMonomerIndex',Value,Filaments,Integrins,Ligands,FILconnections);
                             
                             %----------------------------------------------------------------------------------------
                             % Check if there was a branch point there. If so make the branch a main filament (i.e. set Filaments.Parent = 0 );
@@ -146,8 +146,8 @@ function [Filaments,Adhesions,Ligands,FALconnections] = PolymerizeDepolymerizeCa
                 Filaments.Parent(idx)         = [];
                 Filaments.ParentIndex(idx)    = [];
                 
-                % Check for Adhesion/Ligand connections and delete them
-                [Filaments,Adhesions,Ligands,FALconnections] = DeleteFALconnection('FilamentName',name,Filaments,Adhesions,Ligands,FALconnections);
+                % Check for integrin/Ligand connections and delete them
+                [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection('FilamentName',name,Filaments,Integrins,Ligands,FILconnections);
         end
         
         
