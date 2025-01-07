@@ -27,7 +27,7 @@ function [Filaments, Membrane, Integrins, Ligands, FILconnections, IntegrinTensi
                             L = L + length(Filaments.MonomerIndices{f}) * ModelParameters.MonomerLength; % L is total length of filament structure in microns
                         end 
                     % CALCULATE FORCES DUE TO FILAMENT-ADHESION CONNECTIONS and break connections where force is greater than threshold
-                       [FAx,FAy,Integrins,Ligands,FALconnections,AdhesionTensions] = CalculateForceDueToFALconnections(idx1,Filaments,Integrins,Ligands,IntegrinTensions,FILconnections,ModelParameters);
+                       [FAx,FAy,Integrins,Ligands,FILconnections,IntegrinTensions] = CalculateForceDueToFILconnections(idx1,Filaments,Integrins,Ligands,IntegrinTensions,FILconnections,ModelParameters);
                         
                     % CALCULATE FORCES ACTING ON FILAMENT FROM MEMBRANE
                         % Calculate sum of the normal forces from filements pushing on membrane (all from the same structure)
