@@ -5,20 +5,20 @@ function [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection(Fiel
                     %...................................................................................
                     case 'FilamentName'  % Value = FilamentName
                             FILidx = find( FILconnections.FilamentName == Value ); 
-                            if ~isempty(FALidx) % If this filament has a connection
-                                 a = FILconnections.IntegrinIndex(FALidx,1);
+                            if ~isempty(FILidx) % If this filament has a connection
+                                 a = FILconnections.IntegrinIndex(FILidx,1);
                                  Integrins.AttachedFilamentName(a,1) = NaN;
                                  Integrins.AttachcedLigandIndex(a,1) = NaN;
                                  Integrins.ActiveStatus(a,1) = false;
 
-                                 l = FILconnections.LigandIndex(FALidx,1);
+                                 l = FILconnections.LigandIndex(FILidx,1);
                                  Ligands.AttachedFilamentName(l,1)  = NaN;
                                  Ligands.AttachedIntegrinIndex(l,1) = NaN;
 
-                                 FILconnections.IntegrinIndex(FALidx,:) = [];
-                                 FILconnections.FilamentName (FALidx,:) = [];
-                                 FILconnections.MonomerIndex (FALidx,:) = [];
-                                 FILconnections.LigandIndex  (FALidx,:) = [];
+                                 FILconnections.IntegrinIndex(FILidx,:) = [];
+                                 FILconnections.FilamentName (FILidx,:) = [];
+                                 FILconnections.MonomerIndex (FILidx,:) = [];
+                                 FILconnections.LigandIndex  (FILidx,:) = [];
                             end
 
 
