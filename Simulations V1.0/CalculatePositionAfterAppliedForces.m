@@ -225,7 +225,7 @@ function [FAx,FAy,Integrins,Ligands,FILconnections,IntegrinTensions] = Calculate
                                  for c = con'
                                      index = index + 1;
                                      midx = find( Filaments.MonomerIndices{f} == FILconnections.MonomerIndex(c) ); % Find index of attached monomer (used to get XY coords of monomer)
-                                     aidx = FILconnections.AdhesionIndex(c,1);                                     % Find index of adhesion in integrins (used to get XY coords of adhesion)
+                                     aidx = FILconnections.IntegrinIndex(c,1);                                     % Find index of adhesion in integrins (used to get XY coords of integrins)
                                      xDist = Integrins.XYpoints(aidx,1) - Filaments.XYCoords{f}(midx,1); % X Distance between integrin and attached filament monomer
                                      yDist = Integrins.XYpoints(aidx,2) - Filaments.XYCoords{f}(midx,2); % Y Distance between integrin and attached filament monomer
                                      SeparationDist = sqrt( xDist^2 + yDist^2 );                         % Distance between integrin and attached filament monomer
