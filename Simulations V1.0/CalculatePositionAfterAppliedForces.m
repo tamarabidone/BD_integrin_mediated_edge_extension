@@ -88,7 +88,7 @@ function [Filaments, Membrane, Integrins, Ligands, FILconnections, IntegrinTensi
                                             f = idx1(n);
                                             Filaments.XYCoords{f}(:,1) = Filaments.XYCoords{f}(:,1) + Offset; % Apply Offset
                                             % Find adhesion connections if they exists, and delete connection
-                                            [Filaments,Integrins,Ligands,FALconnections] = DeleteFALconnection('FilamentName',Filaments.Name(f,1),Filaments,Integrins,Ligands,FILconnections);
+                                            [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection('FilamentName',Filaments.Name(f,1),Filaments,Integrins,Ligands,FILconnections);
                                         end
                             end
                         % END HORIZONTAL FILAMENT PERIODIC BOUNDARY ---------------------------------------------------------------------------------------------------------------
