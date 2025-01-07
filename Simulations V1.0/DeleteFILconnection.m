@@ -71,19 +71,19 @@ function [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection(Fiel
                     case 'LigandIndex' % Value = LigandIndex
                             FILidx = find( FILconnections.LigandIndex == Value );
                             if ~isempty(FILidx) 
-                                a = FILconnections.IntegrinIndex(FALidx,1);
+                                a = FILconnections.IntegrinIndex(FILidx,1);
                                 Integrins.AttachedFilamentName(a,1) = NaN;
                                 Integrins.AttachedLigandIndex (a,1) = NaN;
                                 Integrins.ActiveStatus        (a,1) = false;
 
-                                l = FILconnections.LigandIndex(FALidx);
+                                l = FILconnections.LigandIndex(FILidx);
                                 Ligands.AttachedFilamentName (l) = NaN;
                                 Ligands.AttachedIntegrinIndex(l) = NaN;
 
-                                FILconnections.IntegrinIndex(FALidx) = [];   
-                                FILconnections.LigandIndex  (FALidx) = [];
-                                FILconnections.FilamentName (FALidx) = []; 
-                                FILconnections.MonomerIndex (FALidx) = []; 
+                                FILconnections.IntegrinIndex(FILidx) = [];   
+                                FILconnections.LigandIndex  (FILidx) = [];
+                                FILconnections.FilamentName (FILidx) = []; 
+                                FILconnections.MonomerIndex (FILidx) = []; 
                             end
                             
                             
