@@ -1,5 +1,5 @@
-function [Filaments, Membrane, Adhesions, Ligands, FALconnections, AdhesionTensions, Data] = ...
-                                  CalculatePositionAfterAppliedForces(Filaments,Membrane,Adhesions,Ligands,FALconnections,ModelParameters)
+function [Filaments, Membrane, Integrins, Ligands, FILconnections, IntegrinTensions, Data] = ...
+                                  CalculatePositionAfterAppliedForces(Filaments,Membrane,Integrins,Ligands,FILconnections,ModelParameters)
                               
 
     % Find all the main filaments of connected filament structures (group of attached filaments)
@@ -8,7 +8,7 @@ function [Filaments, Membrane, Adhesions, Ligands, FALconnections, AdhesionTensi
     dt = ModelParameters.TimeStep;
     kT = ModelParameters.kT;
     FilamentTips = GetFilamentsTipLocations(Filaments);
-    AdhesionTensions = zeros(size(Adhesions.ActiveStatus));
+    IntegrinTensions = zeros(size(Integrins.ActiveStatus));
     
     Data.YSpeed    = [];
     Data.FilamentName = [];
@@ -27,7 +27,7 @@ function [Filaments, Membrane, Adhesions, Ligands, FALconnections, AdhesionTensi
                             L = L + length(Filaments.MonomerIndices{f}) * ModelParameters.MonomerLength; % L is total length of filament structure in microns
                         end 
                     % CALCULATE FORCES DUE TO FILAMENT-ADHESION CONNECTIONS and break connections where force is greater than threshold
-                       [FAx,FAy,Adhesions,Ligands,FALconnections,AdhesionTensions] = CalculateForceDueToFALconnections(idx1,Filaments,Adhesions,Ligands,AdhesionTensions,FALconnections,ModelParameters);
+                       [FAx,FAy,Integrins,Ligands,FALconnections,AdhesionTensions] = CalculateForceDueToFALconnections(idx1,Filaments,Integrins,Ligands,IntegrinTensions,FILconnections,ModelParameters);
                         
                     % CALCULATE FORCES ACTING ON FILAMENT FROM MEMBRANE
                         % Calculate sum of the normal forces from filements pushing on membrane (all from the same structure)
@@ -88,7 +88,7 @@ function [Filaments, Membrane, Adhesions, Ligands, FALconnections, AdhesionTensi
                                             f = idx1(n);
                                             Filaments.XYCoords{f}(:,1) = Filaments.XYCoords{f}(:,1) + Offset; % Apply Offset
                                             % Find adhesion connections if they exists, and delete connection
-                                            [Filaments,Adhesions,Ligands,FALconnections] = DeleteFALconnection('FilamentName',Filaments.Name(f,1),Filaments,Adhesions,Ligands,FALconnections);
+                                            [Filaments,Integrins,Ligands,FALconnections] = DeleteFALconnection('FilamentName',Filaments.Name(f,1),Filaments,Integrins,Ligands,FILconnections);
                                         end
                             end
                         % END HORIZONTAL FILAMENT PERIODIC BOUNDARY ---------------------------------------------------------------------------------------------------------------
@@ -113,18 +113,18 @@ function [Filaments, Membrane, Adhesions, Ligands, FALconnections, AdhesionTensi
                 end
 
     
-    %% ADHESION MOTION SECTION (not connected)
+    %% INTEGRIN MOTION SECTION (not connected)
     
-                gamma4 = ModelParameters.AdhesionGamma;
-                Aidx = find( ~Adhesions.ActiveStatus ); % Find all un-activated or unattached adhesion indices
+                gamma4 = ModelParameters.IntegrinGamma;
+                Aidx = find( ~Integrins.ActiveStatus ); % Find all un-activated or unattached adhesion indices
                 nA = length(Aidx);
                 SD = sqrt(2*kT*gamma4/dt);     
 
                 if ~isempty(Aidx)
                     Fx = SD*randn(nA,1); % Calculate Brownian motion forces
                     Fy = SD*randn(nA,1);
-                    Adhesions.XYpoints(Aidx,1) = Adhesions.XYpoints(Aidx,1) + Fx*dt/gamma4;
-                    Adhesions.XYpoints(Aidx,2) = Adhesions.XYpoints(Aidx,2) + Fy*dt/gamma4;
+                    Integrins.XYpoints(Aidx,1) = Integrins.XYpoints(Aidx,1) + Fx*dt/gamma4;
+                    Integrins.XYpoints(Aidx,2) = Integrins.XYpoints(Aidx,2) + Fy*dt/gamma4;
                 end
     
                 
@@ -205,33 +205,33 @@ end
 %======================================================================================================
 %======================================================================================================
         
-function [FAx,FAy,Adhesions,Ligands,FALconnections,AdhesionTensions] = CalculateForceDueToFALconnections(idx,Filaments,Adhesions,Ligands,AdhesionTensions,FALconnections,ModelParameters)
+function [FAx,FAy,Integrins,Ligands,FILconnections,IntegrinTensions] = CalculateForceDueToFILconnections(idx,Filaments,Integrins,Ligands,IntegrinTensions,FILconnections,ModelParameters)
 
 
         [A,B,C,D] = MolecularClutchPeakParameters(ModelParameters.MolecularClutch_PeakNumber);
 
     % PeakNumber = 1 or 2
     % k_off =  A*exp(B*ConnectionTension) + C*exp(D*ConnectionTension);
-        %AdhesionTensions = zeros(size(Adhesions.ActiveStatus));
+        %IntegrinTensions = zeros(size(Integrin.ActiveStatus));
         FAx = 0;
         FAy = 0;
         Aidx = [];
         index = 0;
 
-        if ~isempty(FALconnections.AdhesionIndex)
+        if ~isempty(FILconnections.IntegrinIndex)
                     for f = idx'
-                         con = find(FALconnections.FilamentName == Filaments.Name(f,1)); % Find adhesions attached to this filament
+                         con = find(FILconnections.FilamentName == Filaments.Name(f,1)); % Find adhesions attached to this filament
                          if ~isempty(con)
                                  for c = con'
                                      index = index + 1;
-                                     midx = find( Filaments.MonomerIndices{f} == FALconnections.MonomerIndex(c) ); % Find index of attached monomer (used to get XY coords of monomer)
-                                     aidx = FALconnections.AdhesionIndex(c,1);                                     % Find index of adhesion in Adhesions (used to get XY coords of adhesion)
-                                     xDist = Adhesions.XYpoints(aidx,1) - Filaments.XYCoords{f}(midx,1); % X Distance between adhesion and attached filament monomer
-                                     yDist = Adhesions.XYpoints(aidx,2) - Filaments.XYCoords{f}(midx,2); % Y Distance between adhesion and attached filament monomer
-                                     SeparationDist = sqrt( xDist^2 + yDist^2 );                         % Distance between adhesion and attached filament monomer
-                                     StretchDist = SeparationDist - ModelParameters.AdhesionSpringEqLength;  % Stretch distance
+                                     midx = find( Filaments.MonomerIndices{f} == FILconnections.MonomerIndex(c) ); % Find index of attached monomer (used to get XY coords of monomer)
+                                     aidx = FILconnections.AdhesionIndex(c,1);                                     % Find index of adhesion in integrins (used to get XY coords of adhesion)
+                                     xDist = Integrins.XYpoints(aidx,1) - Filaments.XYCoords{f}(midx,1); % X Distance between integrin and attached filament monomer
+                                     yDist = Integrins.XYpoints(aidx,2) - Filaments.XYCoords{f}(midx,2); % Y Distance between integrin and attached filament monomer
+                                     SeparationDist = sqrt( xDist^2 + yDist^2 );                         % Distance between integrin and attached filament monomer
+                                     StretchDist = SeparationDist - ModelParameters.IntegrinSpringEqLength;  % Stretch distance
                                      StretchDist(StretchDist < 0) = 0;                                       % If stretch distance is less than Equilibrium length, StretchDist = 0;
-                                     ConnectionTension = StretchDist * ModelParameters.AdhesionSpringConstant; % Fa = ka*x (Calculate spring force between adhesion and filament
+                                     ConnectionTension = StretchDist * ModelParameters.IntegrinSpringConstant; % Fa = ka*x (Calculate spring force between integrin and filament
 
                                      ForceX = ConnectionTension*(xDist/SeparationDist);   % Fx = F*(x component of separation distance unit vector)
                                      ForceY = ConnectionTension*(yDist/SeparationDist);   % Fy = F*(y component of separation distance unit vector)
@@ -247,7 +247,7 @@ function [FAx,FAy,Adhesions,Ligands,FALconnections,AdhesionTensions] = Calculate
                                      if rand < (1 - exp(-k_off*ModelParameters.TimeStep))    &&   ModelParameters.Adhesion_MolecularClutchOn
                                          Aidx  = [Aidx; aidx]; % Acculumate adhesion indices for connections that were selected to be broken
                                      else
-                                         AdhesionTensions(aidx,1) = ConnectionTension; 
+                                         IntegrinTensions(aidx,1) = ConnectionTension; 
                                          FAx = FAx + ForceX;  % Accumulate all the forces from adhesions being exerted on this filament structure
                                          FAy = FAy + ForceY;
                                      end
@@ -256,9 +256,9 @@ function [FAx,FAy,Adhesions,Ligands,FALconnections,AdhesionTensions] = Calculate
                          end
                     end
 
-                    % Remove connections of deactivated Adhesion-Filament connections (only executes if MC is on. Otheriwse BreakIdx is always empty)-----------------
+                    % Remove connections of deactivated Integrin-Filament connections (only executes if MC is on. Otheriwse BreakIdx is always empty)-----------------
                     if ModelParameters.Adhesion_MolecularClutchOn & ~isempty(Aidx)
-                        [Filaments,Adhesions,Ligands,FALconnections] = DeleteFALconnection('AdhesionIndex',Aidx,Filaments,Adhesions,Ligands,FALconnections);
+                        [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection('IntegrinIndex',Aidx,Filaments,Integrins,Ligands,FILconnections);
                     end
            
         end
