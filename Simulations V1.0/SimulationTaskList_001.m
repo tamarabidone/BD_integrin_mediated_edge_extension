@@ -31,12 +31,12 @@ SaveDirectory = '/uufs/chpc.utah.edu/common/home/bidone-group3/Remi/Extended_Sim
                 ModelParameters.CytoplasmViscosity = 1e5 * 0.0001; % Pascal * seconds
                 ModelParameters.VerticalOffSet = -200;
                 ModelParameters.StartingNumberOfFilaments = 32; % This is a ballpark value based on MaximumFilamentMass
-                ModelParameters.AdhesionSpringConstant = values(k,1); % Change (substrate rigidity)
+                ModelParameters.IntegrinSpringConstant = values(k,1); % Change (substrate rigidity)
                 ModelParameters.k_off_pointed = 7; % s^-1
                 ModelParameters.k_branch = 2.2; % s^-1
                 ModelParameters.FAL_connection_Distance = 10*2.75; % nm
                 ModelParameters.MaximumFilamentMass = 4000; % monomers
-                %ModelParameters.Adhesion_ActivationRate = values(k,5); %Varying adhesion activation rate
+                %ModelParameters.Integrin_ActivationRate = values(k,5); %Varying adhesion activation rate
                 ModelParameters.MolecularClutch_PeakNumber = values(k,2); % Catch bond (1 = WildType or 2 = Manganese)
             % ===============================================================================================================
     
