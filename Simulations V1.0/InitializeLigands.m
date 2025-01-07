@@ -8,6 +8,6 @@ function Ligands = InitializeLigands(ModelParameters)
                                        -ModelParameters.ModelDepth * rand(nL,1) ];
                                                                
     Ligands.AttachedFilamentName   = NaN(nL,1);
-    Ligands.AttachedAdhesionIndex  = NaN(nL,1);
+    Ligands.AttachedIntegrinIndex  = NaN(nL,1);
             
 end
