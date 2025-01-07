@@ -1,4 +1,4 @@
-function [Filaments,Integrins,Ligands,FALconnections] = DeleteFALconnection(Field,Value,Filaments,Integrins,Ligands,FALconnections)
+function [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection(Field,Value,Filaments,Integrins,Ligands,FILconnections)
 
 
             switch Field
