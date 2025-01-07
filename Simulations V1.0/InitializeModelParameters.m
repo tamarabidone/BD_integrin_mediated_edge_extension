@@ -15,15 +15,15 @@ function ModelParameters = InitializeModelParameters
         
 %% Adhesion Properties
 
-        ModelParameters.AdhesionTotal = 100; % 800 MC = on, 400 MC = off; (for LeadingEdgeLength = 2000 nm and RegionsDepth = 200 nm)
+        ModelParameters.IntegrinTotal = 100; % 800 MC = on, 400 MC = off; (for LeadingEdgeLength = 2000 nm and RegionsDepth = 200 nm)
         ModelParameters.FAL_connection_Distance = 2*2.75; % nm
         ModelParameters.Adhesion_ActivationRate = 1; % events/sec
         ModelParameters.Adhesion_DeActivationRate = 0.1; % events/sec
         ModelParameters.Adhesion_MolecularClutchOn = true;
         ModelParameters.MolecularClutch_PeakNumber = 1;
-        ModelParameters.AdhesionSpringConstant = 10; % 10 (picoNewtons/nanometer)
-        ModelParameters.AdhesionSpringEqLength = 2; % (nm) Adhesion spring equilibrium length
-        ModelParameters.AdhesionGamma = 2.16e-5; % pN s/nm    gamma = k_B T/D  where D = 1.9e5 nm^2 /s
+        ModelParameters.IntegrinSpringConstant = 10; % 10 (picoNewtons/nanometer)
+        ModelParameters.IntegrinSpringEqLength = 2; % (nm) Adhesion spring equilibrium length
+        ModelParameters.IntegrinGamma = 2.16e-5; % pN s/nm    gamma = k_B T/D  where D = 1.9e5 nm^2 /s
 
         
 %% Membrane properties
