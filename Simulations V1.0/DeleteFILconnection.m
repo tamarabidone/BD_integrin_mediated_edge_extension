@@ -28,19 +28,19 @@ function [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection(Fiel
                                            FILconnections.MonomerIndex == Value(2) );    % and the integrin/ligand that is connected to the current monomer being depolymerized
                                 % If so, reset integrin/ligand, and remove connection  
                                 if ~isempty(FILidx) 
-                                    a = FILconnections.IntegrinIndex(FALidx,1);
+                                    a = FILconnections.IntegrinIndex(FILidx,1);
                                     Integrins.AttachedFilamentName (a,1) = NaN;
                                     Integrins.AttachedLigandIndex  (a,1) = NaN;
                                     Integrins.ActiveStatus         (a,1) = false;
 
-                                    l = FALconnections.LigandIndex(FALidx);
+                                    l = FALconnections.LigandIndex(FILidx);
                                     Ligands.AttachedFilamentName (l) = NaN;
                                     Ligands.AttachedIntegrinIndex(l) = NaN;
 
-                                    FILconnections.IntegrinIndex(FALidx) = [];   
-                                    FILconnections.LigandIndex  (FALidx) = [];
-                                    FILconnections.FilamentName (FALidx) = []; 
-                                    FILconnections.MonomerIndex (FALidx) = []; 
+                                    FILconnections.IntegrinIndex(FILidx) = [];   
+                                    FILconnections.LigandIndex  (FILidx) = [];
+                                    FILconnections.FilamentName (FILidx) = []; 
+                                    FILconnections.MonomerIndex (FILidx) = []; 
                                 end
 
 
@@ -55,14 +55,14 @@ function [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection(Fiel
                                             Integrins.AttachedLigandIndex (a,1) = NaN;
                                             Integrins.ActiveStatus        (a,1) = false;
 
-                                            l = FALconnections.LigandIndex(FALidx);
+                                            l = FALconnections.LigandIndex(FILidx);
                                             Ligands.AttachedFilamentName (l) = NaN;
                                             Ligands.AttachedIntegrinIndex(l) = NaN;
 
-                                            FILconnections.IntegrinIndex(FALidx) = [];   
-                                            FILconnections.LigandIndex  (FALidx) = [];
-                                            FILconnections.FilamentName (FALidx) = []; 
-                                            FILconnections.MonomerIndex (FALidx) = []; 
+                                            FILconnections.IntegrinIndex(FILidx) = [];   
+                                            FILconnections.LigandIndex  (FILidx) = [];
+                                            FILconnections.FilamentName (FILidx) = []; 
+                                            FILconnections.MonomerIndex (FILidx) = []; 
                                         end
                                 end
 
