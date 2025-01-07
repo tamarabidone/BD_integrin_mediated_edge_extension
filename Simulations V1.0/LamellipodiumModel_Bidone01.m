@@ -1,9 +1,9 @@
 function LamellipodiumModel_Bidone01(ModelParameters,SaveDir,SaveName)
 
-            % Initialize model variables for Filaments, Adhesions, Ligands, and Filament/Adhesion/Ligand connections
+            % Initialize model variables for Filaments, Integrins, Ligands, and Filament/Integrins/Ligand connections
             Membrane       = InitializeMembrane(ModelParameters);
             Filaments      = InitializeActinFilaments(ModelParameters,Membrane); 
-            Adhesions      = InitializeAdhesions(ModelParameters,Membrane);
+            Integrins      = InitializeIntegrins(ModelParameters,Membrane);
             Ligands        = InitializeLigands(ModelParameters);
             FALconnections = InitializeFALconnections;
 %             ShowPlot       = true;
@@ -22,7 +22,7 @@ function LamellipodiumModel_Bidone01(ModelParameters,SaveDir,SaveName)
             SimData.ModelParameters = ModelParameters;
             SimData.TimeVector = TV2;
             SimData.MembranePosition = NaN(length(TV2),1);
-            SimData.AdhesionData     = NaN(ModelParameters.AdhesionTotal,5,length(TV2));
+            SimData.IntegrinData     = NaN(ModelParameters.IntegrinTotal,5,length(TV2));
             
             DATA = cell(length(TV2),1);
             MembranePrevious = Membrane;
@@ -38,11 +38,11 @@ function LamellipodiumModel_Bidone01(ModelParameters,SaveDir,SaveName)
             tic
             for t = TimeVec
                 % Main model calculations ----------------------------------------------------------------------------------
-                [Filaments, Adhesions, Ligands, FALconnections] = PolymerizeDepolymerizeCapDeleteFilaments(CountTotalMonomers(Filaments),Filaments,Adhesions,Ligands,Membrane,FALconnections,ModelParameters);
+                [Filaments, Integrins, Ligands, FALconnections] = PolymerizeDepolymerizeCapDeleteFilaments(CountTotalMonomers(Filaments),Filaments,Integrins,Ligands,Membrane,FALconnections,ModelParameters);
                  Filaments = BranchFilamentsInBranchWindowIfSelected(Filaments,ModelParameters,Membrane);
-                [FALconnections, Adhesions, Ligands] = CreateFALconnections(FALconnections,Filaments,Adhesions,Ligands,ModelParameters);
-                [Filaments, Membrane, Adhesions, Ligands, FALconnections, AdhesionTensions, Data] = CalculatePositionAfterAppliedForces(Filaments,Membrane,Adhesions,Ligands,FALconnections,ModelParameters);
-                [Adhesions, Ligands, FALconnections] = ManageAdhesionsAndLigands(Filaments,Adhesions,Ligands,FALconnections,Membrane,ModelParameters);    
+                [FALconnections, Integrins, Ligands] = CreateFALconnections(FALconnections,Filaments,Integrins,Ligands,ModelParameters);
+                [Filaments, Membrane, Integrins, Ligands, FALconnections, IntegrinTensions, Data] = CalculatePositionAfterAppliedForces(Filaments,Membrane,Integrins,Ligands,FALconnections,ModelParameters);
+                [Integrins, Ligands, FALconnections] = ManageIntegrinsAndLigands(Filaments,Integrins,Ligands,FALconnections,Membrane,ModelParameters);    
                 
                 % Calculate speed, mass, and add random filament if necessarry ---------------------------------------------
                 if rem( round(t,10), 0.1) == 0 % Only record in 100 ms intervals
@@ -50,11 +50,11 @@ function LamellipodiumModel_Bidone01(ModelParameters,SaveDir,SaveName)
                     Data.Timepoint  = t;
                     DATA{index,1}   = Data; % Data contains retrograde flow values for all filaments at each timepoint
                     nMono(index,1)  = CountTotalMonomers(Filaments);
-                    nAdhes(index,1) = length(find(Adhesions.ActiveStatus));
+                    nInteg(index,1) = length(find(Integrins.ActiveStatus));
                     MemVel(index,1) = (Membrane.Nodes.Ycoords(1) - MembranePrevious.Nodes.Ycoords(1)) / ModelParameters.TimeStep; 
                     % Record membrane segment position, and Adhesion data --------------------------------------------------
                     SimData.MembranePosition(index,1) = Membrane.Nodes.Ycoords(1); 
-                    SimData.AdhesionData(:,:,index)   = [Adhesions.XYpoints, Adhesions.ActiveStatus, AdhesionTensions, Adhesions.AttachedFilamentName];
+                    SimData.IntegrinsData(:,:,index)   = [Integrins.XYpoints, Integrins.ActiveStatus, IntegrinTensions, Integrins.AttachedFilamentName];
                     SimData.nMonomers   = nMono;
                     SimData.nAdhesions  = nAdhes;
                     SimData.MemVelocity = MemVel;
