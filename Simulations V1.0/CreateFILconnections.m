@@ -17,11 +17,11 @@ function [FILconnections, Integrins, Ligands] = CreateFILconnections(FILconnecti
                         
                         % Grab XY connections of all unattached (inactive) integrins
                         XY_adhesions = Integrins.XYpoints;
-                        XY_adhesions(FALconnections.IntegrinsIndex,:) = NaN; % Set adhesions already connected to nan
+                        XY_adhesions(FILconnections.IntegrinsIndex,:) = NaN; % Set adhesions already connected to nan
                         
                         % Grab XY connections of all unattached integrins
                         XY_ligands = Ligands.XYpoints;
-                        XY_ligands(FALconnections.LigandIndex,:) = NaN;
+                        XY_ligands(FILconnections.LigandIndex,:) = NaN;
                         
                         % Calculate distance from Integrins to filament monomers
                         Distance_IF = sqrt( (XY_integrins(:,1) - XY_filament(:,1)').^2 + (XY_integrins(:,2) - XY_filament(:,2)').^2 );
