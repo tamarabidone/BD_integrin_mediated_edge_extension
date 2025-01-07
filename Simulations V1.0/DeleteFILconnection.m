@@ -48,7 +48,7 @@ function [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection(Fiel
                     case 'IntegrinIndex'  % Value = IntegrinIndex
                                 
                                 for V = Value'
-                                        FALidx = find( FILconnections.IntegrinIndex == V );
+                                        FILidx = find( FILconnections.IntegrinIndex == V );
                                         if ~isempty(FILidx) 
                                             a = V;
                                             Integrins.AttachedFilamentName(a,1) = NaN;
