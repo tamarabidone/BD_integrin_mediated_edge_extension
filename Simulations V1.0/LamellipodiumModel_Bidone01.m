@@ -5,7 +5,7 @@ function LamellipodiumModel_Bidone01(ModelParameters,SaveDir,SaveName)
             Filaments      = InitializeActinFilaments(ModelParameters,Membrane); 
             Integrins      = InitializeIntegrins(ModelParameters,Membrane);
             Ligands        = InitializeLigands(ModelParameters);
-            FALconnections = InitializeFALconnections;
+            FILconnections = InitializeFILconnections;
 %             ShowPlot       = true;
             
 %             if ShowPlot  
@@ -38,11 +38,11 @@ function LamellipodiumModel_Bidone01(ModelParameters,SaveDir,SaveName)
             tic
             for t = TimeVec
                 % Main model calculations ----------------------------------------------------------------------------------
-                [Filaments, Integrins, Ligands, FALconnections] = PolymerizeDepolymerizeCapDeleteFilaments(CountTotalMonomers(Filaments),Filaments,Integrins,Ligands,Membrane,FALconnections,ModelParameters);
+                [Filaments, Integrins, Ligands, FILconnections] = PolymerizeDepolymerizeCapDeleteFilaments(CountTotalMonomers(Filaments),Filaments,Integrins,Ligands,Membrane,FILconnections,ModelParameters);
                  Filaments = BranchFilamentsInBranchWindowIfSelected(Filaments,ModelParameters,Membrane);
-                [FALconnections, Integrins, Ligands] = CreateFALconnections(FALconnections,Filaments,Integrins,Ligands,ModelParameters);
-                [Filaments, Membrane, Integrins, Ligands, FALconnections, IntegrinTensions, Data] = CalculatePositionAfterAppliedForces(Filaments,Membrane,Integrins,Ligands,FALconnections,ModelParameters);
-                [Integrins, Ligands, FALconnections] = ManageIntegrinsAndLigands(Filaments,Integrins,Ligands,FALconnections,Membrane,ModelParameters);    
+                [FILconnections, Integrins, Ligands] = CreateFILconnections(FILconnections,Filaments,Integrins,Ligands,ModelParameters);
+                [Filaments, Membrane, Integrins, Ligands, FILconnections, IntegrinTensions, Data] = CalculatePositionAfterAppliedForces(Filaments,Membrane,Integrins,Ligands,FILconnections,ModelParameters);
+                [Integrins, Ligands, FILconnections] = ManageIntegrinsAndLigands(Filaments,Integrins,Ligands,FILconnections,Membrane,ModelParameters);    
                 
                 % Calculate speed, mass, and add random filament if necessarry ---------------------------------------------
                 if rem( round(t,10), 0.1) == 0 % Only record in 100 ms intervals
