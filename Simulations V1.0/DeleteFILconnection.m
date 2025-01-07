@@ -33,7 +33,7 @@ function [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection(Fiel
                                     Integrins.AttachedLigandIndex  (a,1) = NaN;
                                     Integrins.ActiveStatus         (a,1) = false;
 
-                                    l = FALconnections.LigandIndex(FILidx);
+                                    l = FILconnections.LigandIndex(FILidx);
                                     Ligands.AttachedFilamentName (l) = NaN;
                                     Ligands.AttachedIntegrinIndex(l) = NaN;
 
@@ -55,7 +55,7 @@ function [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection(Fiel
                                             Integrins.AttachedLigandIndex (a,1) = NaN;
                                             Integrins.ActiveStatus        (a,1) = false;
 
-                                            l = FALconnections.LigandIndex(FILidx);
+                                            l = FILconnections.LigandIndex(FILidx);
                                             Ligands.AttachedFilamentName (l) = NaN;
                                             Ligands.AttachedIntegrinIndex(l) = NaN;
 
