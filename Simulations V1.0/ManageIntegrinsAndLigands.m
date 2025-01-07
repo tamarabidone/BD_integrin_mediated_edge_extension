@@ -32,7 +32,7 @@ function [Integrins,Ligands,FILconnections] = ManageIntegrinsAndLigands(Filament
                         for idx2 = idx'
                                 Integrins.XYpoints(idx2,2) = Integrins.XYpoints(idx2,2) - ModelParameters.ModelDepth; 
                                 % Find out if adhesion is connected to a filament/ligand
-                                [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection('IntegrinIndex',idx2,Filaments,Integrin,Ligands,FILconnections);
+                                [Filaments,Integrins,Ligands,FILconnections] = DeleteFILconnection('IntegrinIndex',idx2,Filaments,Integrins,Ligands,FILconnections);
                         end
                 end
           
