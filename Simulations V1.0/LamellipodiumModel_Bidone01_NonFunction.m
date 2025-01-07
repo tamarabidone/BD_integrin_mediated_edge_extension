@@ -8,7 +8,7 @@ ModelParameters = InitializeModelParameters;  % Initialize Model paramaeters
     ModelParameters.CytoplasmViscosity = 1e5 * 0.0001; % Pascal * seconds
     ModelParameters.VerticalOffSet = -200;
     ModelParameters.StartingNumberOfFilaments = 32; % This is a ballpark value based on MaximumFilamentMass
-    ModelParameters.AdhesionSpringConstant = 0.0001; % Change (substrate rigidity)
+    ModelParameters.IntegrinSpringConstant = 0.0001; % Change (substrate rigidity)
     ModelParameters.k_off_pointed = 7; % s^-1
     ModelParameters.k_branch = 2.2; % s^-1
     ModelParameters.FAL_connection_Distance = 10*2.75; % nm
@@ -18,9 +18,9 @@ ModelParameters = InitializeModelParameters;  % Initialize Model paramaeters
             %save ('SimData_0001pN_wt_1.mat', '-struct', 'SimData');
             Membrane       = InitializeMembrane(ModelParameters);
             Filaments      = InitializeActinFilaments(ModelParameters,Membrane); 
-            Adhesions      = InitializeAdhesions(ModelParameters,Membrane);
+            Integrins      = InitializeIntegrins(ModelParameters,Membrane);
             Ligands        = InitializeLigands(ModelParameters);
-            FALconnections = InitializeFALconnections;
+            FILconnections = InitializeFILconnections;
             ShowPlot       = true;
             
             if ShowPlot  
@@ -31,13 +31,13 @@ ModelParameters = InitializeModelParameters;  % Initialize Model paramaeters
             TimeVec = 0:ModelParameters.TimeStep:ModelParameters.TotalSimulationTime;
             TV2 = 0:0.001:ModelParameters.TotalSimulationTime; % This time vector is for sampling only at 1ms intervals
             nMono   = NaN(length(TV2),1);
-            nAdhes  = NaN(length(TV2),1);
+            nInteg  = NaN(length(TV2),1);
             MemVel  = NaN(length(TV2),1);
             
             SimData.ModelParameters = ModelParameters;
             SimData.TimeVector = TV2;
             SimData.MembranePosition = NaN(length(TV2),1);
-            SimData.AdhesionData     = NaN(ModelParameters.AdhesionTotal,5,length(TV2));
+            SimData.IntegrinData     = NaN(ModelParameters.IntegrinTotal,5,length(TV2));
             
             DATA = cell(length(TV2),1);
             MembranePrevious = Membrane;
@@ -63,11 +63,11 @@ MovieIdx = 0;
 
             for t = TimeVec
                 % Main model calculations ----------------------------------------------------------------------------------
-                [Filaments, Adhesions, Ligands, FALconnections] = PolymerizeDepolymerizeCapDeleteFilaments(CountTotalMonomers(Filaments),Filaments,Adhesions,Ligands,Membrane,FALconnections,ModelParameters);
+                [Filaments, Integrins, Ligands, FILconnections] = PolymerizeDepolymerizeCapDeleteFilaments(CountTotalMonomers(Filaments),Filaments,Integrins,Ligands,Membrane,FILconnections,ModelParameters);
                  Filaments = BranchFilamentsInBranchWindowIfSelected(Filaments,ModelParameters,Membrane);
-                [FALconnections, Adhesions, Ligands] = CreateFALconnections(FALconnections,Filaments,Adhesions,Ligands,ModelParameters);
-                [Filaments, Membrane, Adhesions, Ligands, FALconnections, AdhesionTensions, Data] = CalculatePositionAfterAppliedForces(Filaments,Membrane,Adhesions,Ligands,FALconnections,ModelParameters);
-                [Adhesions, Ligands, FALconnections] = ManageAdhesionsAndLigands(Filaments,Adhesions,Ligands,FALconnections,Membrane,ModelParameters);    
+                [FILconnections, Integrins, Ligands] = CreateFILconnections(FILconnections,Filaments,Integrins,Ligands,ModelParameters);
+                [Filaments, Membrane, Integrins, Ligands, FILconnections, IntegrinTensions, Data] = CalculatePositionAfterAppliedForces(Filaments,Membrane,Integrins,Ligands,FILconnections,ModelParameters);
+                [Integrins, Ligands, FALconnections] = ManageIntegrinsAndLigands(Filaments,Integrins,Ligands,FILconnections,Membrane,ModelParameters);    
                 
                 % Calculate speed, mass, and add random filament if necessarry ---------------------------------------------
                 if rem( round(t,10),0.1) == 0 % Only record in 1ms intervals
@@ -76,12 +76,12 @@ MovieIdx = 0;
                     Data.Timepoint  = t;
                     DATA{index,1}   = Data; % Data contains retrograde flow values for all filaments at each timepoint
                     nMono(index,1)  = CountTotalMonomers(Filaments);
-                    nAdhes(index,1) = length(find(Adhesions.ActiveStatus));
+                    nAdhes(index,1) = length(find(Integrins.ActiveStatus));
                     MemVel(index,1) = (Membrane.Nodes.Ycoords(1) - MembranePrevious.Nodes.Ycoords(1)) / ModelParameters.TimeStep; 
                     
                     % Record membrane segment position, and Adhesion data ------------------
                     SimData.MembranePosition(index,1) = Membrane.Nodes.Ycoords(1); 
-                    SimData.AdhesionData(:,:,index)   = [Adhesions.XYpoints, Adhesions.ActiveStatus, AdhesionTensions, Adhesions.AttachedFilamentName];
+                    SimData.IntegrinData(:,:,index)   = [Integrins.XYpoints, Integrins.ActiveStatus, IntegrinTensions, Integrins.AttachedFilamentName];
                     SimData.nMonomers   = nMono;
                     SimData.nAdhesions  = nAdhes;
                     SimData.MemVelocity = MemVel;
@@ -93,8 +93,8 @@ MovieIdx = 0;
                 % Create plot ----------------------------------------------------------------------------------------------
                 if ShowPlot
                     MovieIdx = MovieIdx + 1;
-                    %[FALconnections,count] = PlotFilamentsAndMembrane(nth,count,Filaments,Membrane,Adhesions,Ligands,FALconnections,FH,AH1,AH2,AH3,t,nMono,nAdhes,MemVel,index,TV2,ModelParameters);
-                    [FALconnections,count] = PlotFilamentsAndMembraneMovie01(nth,count,Filaments,Membrane,Adhesions,Ligands,FALconnections,FH,AH1,AH2,AH3,t,nMono,nAdhes,MemVel,index,TV2,ModelParameters);
+                    %[FILconnections,count] = PlotFilamentsAndMembrane(nth,count,Filaments,Membrane,Integrins,Ligands,FILconnections,FH,AH1,AH2,AH3,t,nMono,nInteg,MemVel,index,TV2,ModelParameters);
+                    [FILconnections,count] = PlotFilamentsAndMembraneMovie01(nth,count,Filaments,Membrane,Integrins,Ligands,FILconnections,FH,AH1,AH2,AH3,t,nMono,nInteg,MemVel,index,TV2,ModelParameters);
                     Fimage = getframe(FH);
                     writeVideo(v,Fimage.cdata)
                     %imwrite( Fimage.cdata, fullfile(MovieDirectory,['Frame_',sprintf('%06d',MovieIdx),'.tif']) )
