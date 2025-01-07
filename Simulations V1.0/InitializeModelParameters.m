@@ -13,12 +13,12 @@ function ModelParameters = InitializeModelParameters
 
         ModelParameters.LigandTotal = 400; 
         
-%% Adhesion Properties
+%% Integrin Properties
 
         ModelParameters.IntegrinTotal = 100; % 800 MC = on, 400 MC = off; (for LeadingEdgeLength = 2000 nm and RegionsDepth = 200 nm)
-        ModelParameters.FAL_connection_Distance = 2*2.75; % nm
-        ModelParameters.Adhesion_ActivationRate = 1; % events/sec
-        ModelParameters.Adhesion_DeActivationRate = 0.1; % events/sec
+        ModelParameters.FIL_connection_Distance = 2*2.75; % nm
+        ModelParameters.Integrin_ActivationRate = 1; % events/sec
+        ModelParameters.Integrin_DeActivationRate = 0.1; % events/sec
         ModelParameters.Adhesion_MolecularClutchOn = true;
         ModelParameters.MolecularClutch_PeakNumber = 1;
         ModelParameters.IntegrinSpringConstant = 10; % 10 (picoNewtons/nanometer)
