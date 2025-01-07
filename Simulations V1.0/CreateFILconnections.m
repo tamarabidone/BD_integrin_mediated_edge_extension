@@ -9,7 +9,7 @@ function [FILconnections, Integrins, Ligands] = CreateFILconnections(FILconnecti
             for f = 1:nF
                         % Grab XY points of all monomers making up this filament
                         XY_filament = Filaments.XYCoords{f};
-                        idx1 = find( FALconnections.FilamentName  == Filaments.Name(f,1) );
+                        idx1 = find( FILconnections.FilamentName  == Filaments.Name(f,1) );
                         if ~isempty(idx1)
                             idx2 = find( ismember( Filaments.MonomerIndices{f},FALconnections.MonomerIndex(idx1)) );
                             XY_filament(idx2,:) = NaN;  % Set monomer positions that are already connected to a ligand/integrin to nan
