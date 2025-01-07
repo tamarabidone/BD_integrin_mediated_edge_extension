@@ -1,8 +1,8 @@
-function FALconnections = InitializeFALconnections
+function FILconnections = InitializeFILconnections
 
-     FALconnections.IntegrinIndex = zeros(0,1);
-     FALconnections.LigandIndex   = zeros(0,1);
-     FALconnections.FilamentName  = zeros(0,1);
-     FALconnections.MonomerIndex  = zeros(0,1);
+     FILconnections.IntegrinIndex = zeros(0,1);
+     FILconnections.LigandIndex   = zeros(0,1);
+     FILconnections.FilamentName  = zeros(0,1);
+     FILconnections.MonomerIndex  = zeros(0,1);
      
 end
