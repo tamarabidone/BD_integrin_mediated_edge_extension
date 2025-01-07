@@ -17,7 +17,7 @@ function [FILconnections, Integrins, Ligands] = CreateFILconnections(FILconnecti
                         
                         % Grab XY connections of all unattached (inactive) integrins
                         XY_adhesions = Integrins.XYpoints;
-                        XY_adhesions(FILconnections.IntegrinsIndex,:) = NaN; % Set adhesions already connected to nan
+                        XY_adhesions(FILconnections.IntegrinIndex,:) = NaN; % Set adhesions already connected to nan
                         
                         % Grab XY connections of all unattached integrins
                         XY_ligands = Ligands.XYpoints;
