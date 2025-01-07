@@ -76,7 +76,7 @@ function [FILconnections,count] = PlotFilamentsAndMembraneMovie01(nth,count,Fila
          % plot(AH1, Integrins.XYpoints(idx,1), Integrins.XYpoints(idx,2), '*k', 'MarkerSize', 3)
         
 %        plot active integrins as red
-        idx = FALconnections.IntegrinIndex;
+        idx = FILconnections.IntegrinIndex;
         % plot(AH1, Integrins.XYpoints(idx,1), Integrins.XYpoints(idx,2),  '*', 'MarkerSize', 6,'Color',[1,0,0])
         % 
         % if ModelParameters.MolecularClutch_PeakNumber == 1
