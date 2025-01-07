@@ -1,4 +1,4 @@
-function [FALconnections,count] = PlotFilamentsAndMembrane(nth,count,Filaments,Membrane,Adhesions,Ligands,FALconnections,FH,AH1,AH2,AH3,t,nMono,nAdhes,MemVel,index,TimeVec,ModelParameters)
+function [FILconnections,count] = PlotFilamentsAndMembrane(nth,count,Filaments,Membrane,Integrins,Ligands,FILconnections,FH,AH1,AH2,AH3,t,nMono,nAdhes,MemVel,index,TimeVec,ModelParameters)
 
     if (count >= nth) || isequal(t,0)% Plot every 10th, 100th, or nth frame etc.
         count = 0;
@@ -53,16 +53,16 @@ function [FALconnections,count] = PlotFilamentsAndMembrane(nth,count,Filaments,M
         AreaOfAllRegions = delX*delY/1000^2; % um^2
 
         % Plot inactive adhesion indices and plot
-        idx = find(~Adhesions.ActiveStatus);
-        plot(AH1, Adhesions.XYpoints(idx,1), Adhesions.XYpoints(idx,2), '*k', 'MarkerSize', 6)
+        idx = find(~Integrins.ActiveStatus);
+        plot(AH1, Integrins.XYpoints(idx,1), Integrins.XYpoints(idx,2), '*k', 'MarkerSize', 6)
        
         % plot active adhesions as red
-        idx = FALconnections.AdhesionIndex;
-        plot(AH1, Adhesions.XYpoints(idx,1), Adhesions.XYpoints(idx,2),  '*r', 'MarkerSize', 6)
+        idx = FILconnections.AdhesionIndex;
+        plot(AH1, Integrins.XYpoints(idx,1), Integrins.XYpoints(idx,2),  '*r', 'MarkerSize', 6)
        
         idx = max([find(~isnan(MemVel),1,'last'),1]);
         title(AH1,[{['Time = ', sprintf('%#0.3f',t), ' s      ',...
-                     'FAL connections = ', pad( num2str( numel(FALconnections.AdhesionIndex) ),4,'left'), '     dt = ', num2str(ModelParameters.TimeStep*1000),' ms']};...
+                     'FIL connections = ', pad( num2str( numel(FILconnections.AdhesionIndex) ),4,'left'), '     dt = ', num2str(ModelParameters.TimeStep*1000),' ms']};...
                    {['Filament mass = ', pad( sprintf('%0.0f', nMono (idx,1) ), 6,'left'), ' monomers     ',...
                     'Membrane speed = ',      pad( sprintf('%0.1f', MemVel(idx,1) ), 7,'left'), ' nm/s']}],...
                      'FontName','monospaced','FontSize', 14, 'FontWeight','bold','HorizontalAlignment','center')
@@ -79,12 +79,12 @@ function [FALconnections,count] = PlotFilamentsAndMembrane(nth,count,Filaments,M
        ylabel(AH1,'Y(nm)','FontSize',22,'FontWeight','bold')
        
 
-       % Plot Adhesions connections --------------------------
-       %idx = find(~isnan(FALconnections.AdhesionIndex));
-       for n = 1:length(FALconnections.AdhesionIndex)  %n = 1:nC
-            Axy = Adhesions.XYpoints(FALconnections.AdhesionIndex(n,1),:); 
-            f = find(Filaments.Name == FALconnections.FilamentName(n,1)); 
-            Midx = find(Filaments.MonomerIndices{f} == FALconnections.MonomerIndex(n,1));
+       % Plot integrin connections --------------------------
+       %idx = find(~isnan(FILconnections.AdhesionIndex));
+       for n = 1:length(FILconnections.AdhesionIndex)  %n = 1:nC
+            Axy = Integrins.XYpoints(FILconnections.IntegrinIndex(n,1),:); 
+            f = find(Filaments.Name == FILconnections.FilamentName(n,1)); 
+            Midx = find(Filaments.MonomerIndices{f} == FILconnections.MonomerIndex(n,1));
             Mxy  = Filaments.XYCoords{f}(Midx,:);
             plot(AH1, [Axy(1);Mxy(1)], [Axy(2);Mxy(2)],':k')
        end
