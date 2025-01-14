@@ -14,17 +14,14 @@ Membrane displacement and velocity calculations.
 
 Subfunctions Used in the Simulation
 1. InitializeMembrane(ModelParameters)
-Purpose: Initializes the membrane structure with the specified model parameters.
+Purpose: Initializes the membrane structure with the specified model parameters. Sets up membrane nodes and geometry.
 
-Sets up membrane nodes and geometry.
 2. InitializeActinFilaments(ModelParameters, Membrane)
-Purpose: Initializes the actin filaments according to the model parameters and the membrane geometry.
+Purpose: Initializes the actin filaments according to the model parameters and the membrane geometry. Sets up filament properties like length, position, and connectivity.
 
-Sets up filament properties like length, position, and connectivity.
 3. InitializeAdhesions(ModelParameters, Membrane)
-Purpose: Initializes the adhesion sites on the membrane.
+Purpose: Initializes the adhesion sites on the membrane. Sets up the initial adhesion points where actin filaments can bind.
 
-Sets up the initial adhesion points where actin filaments can bind.
 4. InitializeLigands(ModelParameters)
 Purpose: Initializes the ligands involved in adhesion interactions.
 
