@@ -2,57 +2,41 @@ clc
 clear
 close all
 
-RawSaveDirectory = ' _____ '; %Insert directory to folder containing raw files here
+RawSaveDirectory = '_____' %Insert directory to raw files here;
 
+nRuns = 40;
+k_a = [0.0001 0.0001 0.001 0.001 0.01 0.01];
+peak = [1 2 1 2 1 2];
+nligands = 400;
 
-% nRuns = 3;
-% k_a = [0.0001 0.001 0.01];
-% peak = [1 2];
-% nligands = 400;
-% f = [1 2];
-
-
-nRuns = 6; % Total number of runs for each condition
-k_a = [0.0001 ,0.0001,0.001, 0.01, 0.1]; % adhesion spring constant
-peak = [1, 2, 1, 1,1];   % WT or Mn
-nLigands = 400;
-
-    for m = 1:length(k_a) % Create combinations of all conditions
+  for m = 1:length(k_a) % Create combinations of all conditions
         p = peak(m);
         k = k_a(m);
-        Nem_order = [];
-            for r = 1:nRuns
-  % for m = 1:length(nligands) % Create combinations of all conditions
-  %       for n = 1:length(peak)
-  %           for k = 1:length(k_a)
-  %                    for r = 1:nRuns
-                            SaveName = ['SIMULATION-001__','Ka_',SimFormat(k),'__Peak_',sprintf('%02d',p), '__nLigands_',sprintf('%04d',nLigands), '_run_', sprintf('%02d',r), '.mat'];
-                            load(fullfile(RawSaveDirectory, SaveName));
-                            nematic_order = [];
-                            tic
-                             for t = 300:501
-                                 Orientation = atan2d(SimData.Data{t,1}.Orientation(:,2),SimData.Data{t,1}.Orientation(:,1));
-                                 Length = SimData.Data{t,1}.FilamentLength(:,1);
-                                 Orient = Orientation;
-                                 W_O = Orient.*Length;
-                                 Tot_L = sum(Length);
-                                 Orientation_per_run = sum(W_O)/((Tot_L));
-                                 theta = abs(Orientation_per_run-Orient);
-                                 nematic_order = (3 * cosd(theta).^2 - 1 )/ 2;
-                                 W_N = nematic_order .* Length;
-                                 W_N_T = sum(W_N)/Tot_L;
-                                 Nem_order = [Nem_order;mean(nematic_order)];
-                             end
-                     end
+        Mean_nem_order = NaN(9000, 40);
 
-                    SaveName = (['Nematic_vals.','k_a_', SimFormat(k), '_peak_', sprintf('%01d',p), '_nligands_', sprintf('%03d', nLigands),'.mat']);
-                    Directory = '/Users/remisondaz/Desktop/MATLAB/Histograms';
-                    FullFilePath = fullfile(Directory, SaveName);
-                    save(FullFilePath,  'Nem_order');
-                        
+            for r = 1:nRuns
+                            SaveName = ['SIMULATION-001__','Ka_',SimFormat(k),'__Peak_',sprintf('%02d',p), '__nLigands_',sprintf('%04d',nligands), '_run_', sprintf('%02d',r), '.mat'];
+                            load(fullfile(RawSaveDirectory, SaveName));
+                             for t = 1:9000
+                                Orientation = atan2d(SimData.Data{t,1}.Orientation(:,2),SimData.Data{t,1}.Orientation(:,1));
+                                Length = SimData.Data{t,1}.FilamentLength(:,1);
+                                Orient = Orientation;
+                                W_O = Orient.*Length;
+                                Tot_L = sum(Length);
+                                Orientation_per_run = sum(W_O)/((Tot_L));
+                                theta = abs(Orientation_per_run-Orient);
+                                nematic_order = (3 * cosd(theta).^2 - 1 )/ 2;
+                                W_N = nematic_order .* Length;
+                                W_N_T = sum(W_N)/Tot_L;
+                                Mean_nem_order(t,r) = W_N_T;
+                             end
             end
-  %       end
-  % end
+                    SaveName = (['Nem_val.','k_a_', SimFormat(k), '_peak_', sprintf('%01d',p), '_nligands_', sprintf('%03d', nligands),'.mat']);
+                    Directory = '____' %Insert directory to save files here;
+                    FullFilePath = fullfile(Directory, SaveName);
+                    save(FullFilePath, 'Mean_nem_order');
+            end
+                           
 
   %%
   data1 = load("Nematic_vals.k_a_000d0000_peak_1_nligands_400.mat");
