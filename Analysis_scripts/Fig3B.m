@@ -32,51 +32,73 @@ nligands = 400;
                             
                
   %%
-  data1 = load("Adhesion_vals.k_a_000d0001_peak_1_nligands_400.mat");
-  data2 = load("Adhesion_vals.k_a_000d0001_peak_2_nligands_400.mat");
-  data3 = load("Adhesion_vals.k_a_000d0010_peak_1_nligands_400.mat");
-  data4 = load("Adhesion_vals.k_a_000d0010_peak_2_nligands_400.mat");
-  data5 = load("Adhesion_vals.k_a_000d0100_peak_1_nligands_400.mat");
-  data6 = load("Adhesion_vals.k_a_000d0100_peak_2_nligands_400.mat");
+data1 = load("Mem_val.k_a_000d0001_peak_1_nligands_400.mat");
+data2 = load("Mem_val.k_a_000d0001_peak_2_nligands_400.mat");
+data3 = load("Mem_val.k_a_000d0010_peak_1_nligands_400.mat");
+data4 = load("Mem_val.k_a_000d0010_peak_2_nligands_400.mat");
+data5 = load("Mem_val.k_a_000d0100_peak_1_nligands_400.mat");
+data6 = load("Mem_val.k_a_000d0100_peak_1_nligands_400.mat");
 
-  X = [1 2 3 4 5 6];
-  Flow = {data1.force_adhesions; data2.force_adhesions;data3.force_adhesions;...
-          data4.force_adhesions;data5.force_adhesions;data6.force_adhesions};
-  [Fout,nCells,Ns] = CellArray2PaddedNanArray(Flow);
-  Medians = median(Fout, "omitnan");
-  Xvals = repmat(X, size(Fout,1),1);
+time = 8000:9000;
+nem_order_1 = mean(data1.mean_traction_stress(time,1:40), 1, 'omitnan')';
+nem_order_2 = mean(data2.mean_traction_stress(time,1:40), 1, 'omitnan')';
+nem_order_3 = mean(data3.mean_traction_stress(time,1:40), 1, 'omitnan')';
+nem_order_4 = mean(data4.mean_traction_stress(time,1:40), 1, 'omitnan')';
+nem_order_5 = mean(data5.mean_traction_stress(time,1:40), 1, 'omitnan')';
+nem_order_6 = mean(data6.mean_traction_stress(time,1:40), 1, 'omitnan')';
+ 
+%Find indices of the 25 lowest points in group 1
+[~, idx_low25] = maxk(nem_order_1, 25);
 
+% Select those indices in ALL groups
+nem_order_1 = nem_order_1(idx_low25);
+nem_order_2 = nem_order_2(idx_low25);
+nem_order_3 = nem_order_3(idx_low25);
+nem_order_4 = nem_order_4(idx_low25);
+nem_order_5 = nem_order_5(idx_low25);
+nem_order_6 = nem_order_6(idx_low25);
 
-FH = figure(1); clf
-FH.Color = 'w';
-MarkerSize = 20;
-%Xlabels = [10e-2,10e-2,10e0,10e0];
-SH1 = swarmchart(Xvals,Fout, '.k', 'SizeData',1,'XJitterWidth',0.5,'CData',0.4*[1,1,1]); hold on
-  bh = boxplot(Fout(:, [1,2,3,4,5,6]),'symbol', ' ', 'Notch', 'on');
-  set(bh,'LineWidth',3)
-  medians = findobj(gca, 'Tag', 'Median');
-  set(gca, 'box', 'off', 'fontsize', 42, 'LineWidth', 3)
-  boxes = findobj(gca, 'Tag', 'Box');
-  % Set individual colors for each boxplot
-  colors = {[0.753, 0.753, 0.753],[1 0 0],[0.502, 0.502, 0.502], [1 0 0], [0.251, 0.251, 0.251], [1 0 0]};
-  boxes = findobj(gca, 'Tag', 'Box');
-  boxes = flipud(boxes);
-for i = 1:length(boxes)
-    set(boxes(i), 'LineWidth', 3, 'Color', colors{i}); % Set the outline color
+data = {nem_order_1, nem_order_2, nem_order_3, nem_order_4, nem_order_5, nem_order_6};
+
+figure;  
+hold on; 
+set(gcf,'Color','w');
+
+wt_color  = [0.4 0.7 1.0];  
+mn_color  = [1.0 0.2 0.2];
+colors = {wt_color, mn_color, wt_color, mn_color, wt_color, mn_color};
+
+numStiffness = 3;
+offsets = [-0.35, +0.35];      % WT vs Mn²⁺ separation
+groupSpacing = 2;            % spacing between stiffness groups
+jitterAmount = 0.2;         % small random x spread
+
+for i = 1:numel(data)
+    y = data{i};
+    y = y(:);
+    y = y(~isnan(y));
+
+    groupIndex = ceil(i/2);                 
+    condIndex  = mod(i-1,2)+1;        
+
+    xBase = groupIndex * groupSpacing;
+    xThis = xBase + offsets(condIndex);
+    xVals = xThis + (rand(size(y))-0.5)*2*jitterAmount;
+
+    % Scatter points
+    scatter(xVals, y, 60, 'filled', 'MarkerFaceAlpha', 0.6, 'MarkerFaceColor', colors{condIndex})
+
+    % Median line
+    med = mean(y);
+    plot([xThis-0.1 xThis+0.1], [med med], 'k-', 'LineWidth', 2)
 end
-for j = 1:length(boxes)
-    % Use patch to set the face to be transparent with colored edges
-    xData = get(boxes(j), 'XData');
-    yData = get(boxes(j), 'YData');
-    patch(xData, yData, colors{j}, 'FaceAlpha', 0.2, 'EdgeColor', colors{j}, 'LineWidth', 3); 
-end
-  %ylim([0 25])
-  %xticks([1 2 3 4 5 6 7 8 9 10])
-  set(gca, 'TickLabelInterpreter', 'latex','FontName', 'Arial');
- xticklabels({'0.4', '$0.4 + Mn^{2+}$','6', '$6 + Mn^{2+}$','60','$60 + Mn^{2+}$'});
-xlabel('Substrate Rigidity (kPa)','FontSize', 50);
-ylabel('F_{sub} (pN)','FontSize', 50);
-set(gcf, 'Position',[700 100 700 1000]);
-hold off
-print('AdhesionForce.svg', '-dsvg', '-r200');
-%exportgraphics(gca,'Flow4caseslastsec.png','Resolution',350)
+
+xticks(groupSpacing*(1:numStiffness))
+xticklabels({'0.4', '6', '60'})  
+ylabel('Traction Stress (Pa)')
+xlabel('Substrate Rigidity (kPa)')
+set(gca, 'FontSize', 20, 'LineWidth', 2, 'box', 'off')
+
+h1 = scatter(nan, nan, 60, 'filled', 'MarkerFaceColor', wt_color, 'MarkerFaceAlpha',0.6);
+h2 = scatter(nan, nan, 60, 'filled', 'MarkerFaceColor', mn_color, 'MarkerFaceAlpha',0.6);
+legend([h1 h2], {'WT', 'Mn^{2+}'}, 'Location','best', 'Box','off')
