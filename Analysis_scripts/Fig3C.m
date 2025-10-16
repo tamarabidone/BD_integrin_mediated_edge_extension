@@ -32,12 +32,12 @@ nligands = 400;
                             
                
   %%
-data1 = load("Mem_val.k_a_000d0001_peak_1_nligands_400.mat");
-data2 = load("Mem_val.k_a_000d0001_peak_2_nligands_400.mat");
-data3 = load("Mem_val.k_a_000d0010_peak_1_nligands_400.mat");
-data4 = load("Mem_val.k_a_000d0010_peak_2_nligands_400.mat");
-data5 = load("Mem_val.k_a_000d0100_peak_1_nligands_400.mat");
-data6 = load("Mem_val.k_a_000d0100_peak_1_nligands_400.mat");
+data1 = load("Int_val.k_a_000d0001_peak_1_nligands_400.mat");
+data2 = load("Int_val.k_a_000d0001_peak_2_nligands_400.mat");
+data3 = load("Int_val.k_a_000d0010_peak_1_nligands_400.mat");
+data4 = load("Int_val.k_a_000d0010_peak_2_nligands_400.mat");
+data5 = load("Int_val.k_a_000d0100_peak_1_nligands_400.mat");
+data6 = load("Int_val.k_a_000d0100_peak_1_nligands_400.mat");
 
 time = 8000:9000;
 nem_order_1 = mean(data1.mean_integrins(time,1:40), 1, 'omitnan')';
