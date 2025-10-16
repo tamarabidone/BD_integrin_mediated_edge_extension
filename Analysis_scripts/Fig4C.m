@@ -39,7 +39,10 @@ nligands = 400;
                            
 
   %%
-  % To generate this plot the Violinplot.m extension must be located in the same folder of this file
+% This script generates violin plots using the Violinplot package.
+% The package is available online at: https://github.com/bastibe/Violinplot-Matlab
+% Make sure that Violinplot.m (and related files) are either in the same folder 
+% as this script or added to your MATLAB path.
 data1 = load("Nem_val.k_a_000d0001_peak_1_nligands_400.mat");
 data2 = load("Nem_val.k_a_000d0001_peak_2_nligands_400.mat");
 data3 = load("Nem_val.k_a_000d0010_peak_1_nligands_400.mat");
