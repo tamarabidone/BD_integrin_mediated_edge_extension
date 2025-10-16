@@ -6,7 +6,7 @@ SaveDirectory = '/uufs/chpc.utah.edu/common/home/bidone-group3/Remi/Extended_Sim
      % Setup all combinations of parameters to be varied  -------------------------------------------------------------------
     values = [];
     nRuns = 40; % Total number of runs for each condition
-    k_a = [0.0001 ,0.0001,0.001 0.001 0.01 0.01]; % adhesion spring constant
+    k_a = [0.0001, 0.0001, 0.001, 0.001, 0.01, 0.01]; % adhesion spring constant
     peak = [1, 2, 1, 2, 1, 2];   % WT or Mn
     nLigands = 400;
 
@@ -51,4 +51,5 @@ SaveDirectory = '/uufs/chpc.utah.edu/common/home/bidone-group3/Remi/Extended_Sim
     quit 
     
     
+
 
