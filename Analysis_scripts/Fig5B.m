@@ -43,8 +43,6 @@ nem_order_1 = mean(data1.branching_region(time,1:40), 1, 'omitnan')';
 nem_order_2 = mean(data2.branching_region(time,1:40), 1, 'omitnan')';
 nem_order_3 = mean(data3.branching_region(time,1:40), 1, 'omitnan')';
 nem_order_4 = mean(data4.branching_region(time,1:40), 1, 'omitnan')';
-nem_order_5 = mean(data5.branching_region(time,1:40), 1, 'omitnan')';
-nem_order_6 = mean(data6.branching_region(time,1:40), 1, 'omitnan')';
  
 %Find indices of the 25 highest points in group 1
 [~, idx_low25] = maxk(nem_order_1, 25);
