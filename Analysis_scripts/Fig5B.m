@@ -12,29 +12,19 @@ nligands = 400;
   for m = 1:length(k_a) % Create combinations of all conditions
         p = peak(m);
         k = k_a(m);
-        Mean_nem_order = NaN(9000, 40);
+        branching_region = NaN(9000, 40);
 
             for r = 1:nRuns
                             SaveName = ['SIMULATION-001__','Ka_',SimFormat(k),'__Peak_',sprintf('%02d',p), '__nLigands_',sprintf('%04d',nligands), '_run_', sprintf('%02d',r), '.mat'];
                             load(fullfile(RawSaveDirectory, SaveName));
                              for t = 1:9000
-                                Orientation = atan2d(SimData.Data{t,1}.Orientation(:,2),SimData.Data{t,1}.Orientation(:,1));
-                                Length = SimData.Data{t,1}.FilamentLength(:,1);
-                                Orient = Orientation;
-                                W_O = Orient.*Length;
-                                Tot_L = sum(Length);
-                                Orientation_per_run = sum(W_O)/((Tot_L));
-                                theta = abs(Orientation_per_run-Orient);
-                                nematic_order = (3 * cosd(theta).^2 - 1 )/ 2;
-                                W_N = nematic_order .* Length;
-                                W_N_T = sum(W_N)/Tot_L;
-                                Mean_nem_order(t,r) = W_N_T;
+                                branching_region(t,r) = length(find(SimData.Data{t,1}.DistanceMembrane(:) < 15))/(length(SimData.Data{t,1}.Parent(:)));
                              end
             end
-                    SaveName = (['Nem_val.','k_a_', SimFormat(k), '_peak_', sprintf('%01d',p), '_nligands_', sprintf('%03d', nligands),'.mat']);
+                    SaveName = (['Reg_val.','k_a_', SimFormat(k), '_peak_', sprintf('%01d',p), '_nligands_', sprintf('%03d', nligands),'.mat']);
                     Directory = '____' %Insert directory to save files here;
                     FullFilePath = fullfile(Directory, SaveName);
-                    save(FullFilePath, 'Mean_nem_order');
+                    save(FullFilePath, 'branching_region');
             end
                            
 
@@ -43,21 +33,21 @@ nligands = 400;
 % The package is available online at: https://github.com/bastibe/Violinplot-Matlab
 % Make sure that Violinplot.m (and related files) are either in the same folder 
 % as this script or added to your MATLAB path.
-data1 = load("Nem_val.k_a_000d0001_peak_1_nligands_400.mat");
-data2 = load("Nem_val.k_a_000d0001_peak_2_nligands_400.mat");
-data3 = load("Nem_val.k_a_000d0010_peak_1_nligands_400.mat");
-data4 = load("Nem_val.k_a_000d0100_peak_1_nligands_400.mat");
+data1 = load("Reg_val.k_a_000d0001_peak_1_nligands_400.mat");
+data2 = load("Reg_val.k_a_000d0001_peak_2_nligands_400.mat");
+data3 = load("Reg_val.k_a_000d0010_peak_1_nligands_400.mat");
+data4 = load("Reg_val.k_a_000d0100_peak_1_nligands_400.mat");
 
-time = 5000:1000:7000;
-nem_order_1 = mean(data1.Mean_nem_order(time,1:40), 1, 'omitnan')';
-nem_order_2 = mean(data2.Mean_nem_order(time,1:40), 1, 'omitnan')';
-nem_order_3 = mean(data3.Mean_nem_order(time,1:40), 1, 'omitnan')';
-nem_order_4 = mean(data4.Mean_nem_order(time,1:40), 1, 'omitnan')';
-nem_order_5 = mean(data5.Mean_nem_order(time,1:40), 1, 'omitnan')';
-nem_order_6 = mean(data6.Mean_nem_order(time,1:40), 1, 'omitnan')';
+time = 7000:9000;
+nem_order_1 = mean(data1.branching_region(time,1:40), 1, 'omitnan')';
+nem_order_2 = mean(data2.branching_region(time,1:40), 1, 'omitnan')';
+nem_order_3 = mean(data3.branching_region(time,1:40), 1, 'omitnan')';
+nem_order_4 = mean(data4.branching_region(time,1:40), 1, 'omitnan')';
+nem_order_5 = mean(data5.branching_region(time,1:40), 1, 'omitnan')';
+nem_order_6 = mean(data6.branching_region(time,1:40), 1, 'omitnan')';
  
-%Find indices of the 25 lowest points in group 1
-[~, idx_low25] = mink(nem_order_1, 25);
+%Find indices of the 25 highest points in group 1
+[~, idx_low25] = maxk(nem_order_1, 25);
 
 % Select those indices in ALL groups
 nem_order_1 = nem_order_1(idx_low25);
@@ -93,7 +83,7 @@ for f = 1:length(bh)
  set(gca, 'TickLabelInterpreter', 'latex','FontName', 'Times', 'FontSize', 25);
  xticks([1 2 3 4])
  xticklabels({'0.4', '0.4 + Mn^{2+}', '6','60'})
- ylabel('Order Parameter')
+ ylabel('F-actin ratio in d_{branch} (s^{-1}')
  xlabel('Substrate Rigidity (kPa)')
  box off
  hold off
