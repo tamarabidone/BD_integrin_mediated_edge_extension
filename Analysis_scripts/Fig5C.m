@@ -2,97 +2,86 @@ clc
 clear
 close all
 
-RawSaveDirectory = ' _____ '; %Insert directory to folder containing raw files here
+RawSaveDirectory = '_____' %Insert directory to raw files here;
 
-
-nRuns = 6;
-nIntegrins = 100;
-k_a =  [0.0001, 0.0001, 0.001, 0.01];
-peak = [1, 2, 1, 1];
+nRuns = 40;
+k_a = [0.0001 0.0001 0.001 0.001 0.01 0.01];
+peak = [1 2 1 2 1 2];
 nligands = 400;
 
-for n = 1:length(k_a)
-             p = peak(n);
-             k = k_a(n);
-             struct = [];
-             for r = 1:nRuns
-                            tic
-                            SaveName = ['SIMULATION-001__','Ka_',SimFormat(k),'__Peak_',sprintf('%02d',p), '__nLigands_',sprintf('%04d',nligands ), '_run_', sprintf('%02d',r), '.mat'];
+  for m = 1:length(k_a) % Create combinations of all conditions
+        p = peak(m);
+        k = k_a(m);
+        force_mem = NaN(9000, 40);
+
+            for r = 1:nRuns
+                            SaveName = ['SIMULATION-001__','Ka_',SimFormat(k),'__Peak_',sprintf('%02d',p), '__nLigands_',sprintf('%04d',nligands), '_run_', sprintf('%02d',r), '.mat'];
                             load(fullfile(RawSaveDirectory, SaveName));
-                            for t = 300:501
-                                 structNames = SimData.Data{t,1}.StructName;
-                                 bins = 0.5:1:length(structNames)+0.5;
-                                 BinCenters = floor(bins(2:end));
-                                 counts = histcounts(structNames,bins)';
-                                 cIdx = find(counts > 1);
-                                 Lia = ismember(structNames,BinCenters(cIdx));
-                                 struct=[struct;length(SimData.Data{t,1}.StructName(Lia))/length(SimData.Data{t,1}.StructName)];
-                            end 
-                     end
-                    SaveName = (['Struct_vals.','k_a_', SimFormat(k), '_peak_', num2str(p), '_nligands_', sprintf('%03d', nligands),'.mat']);
-                    Directory = '/Users/remisondaz/Desktop/MATLAB/Histograms';
-                    FullFilePath = fullfile(Directory, SaveName);
-                    save(FullFilePath, 'struct');
-                    toc
+                             for t = 1:9000
+                                force_mem(t,r) = sum(SimData.Data{t,1}.ForceonMembrane);
+                             end
             end
+                    SaveName = (['Force_val.','k_a_', SimFormat(k), '_peak_', sprintf('%01d',p), '_nligands_', sprintf('%03d', nligands),'.mat']);
+                    Directory = '____' %Insert directory to save files here;
+                    FullFilePath = fullfile(Directory, SaveName);
+                    save(FullFilePath, 'force_mem');
+            end
+                           
 
-%%
+  %%
+% This script generates violin plots using the Violinplot package.
+% The package is available online at: https://github.com/bastibe/Violinplot-Matlab
+% Make sure that Violinplot.m (and related files) are either in the same folder 
+% as this script or added to your MATLAB path.
+data1 = load("Force_val.k_a_000d0001_peak_1_nligands_400.mat");
+data2 = load("Force_val.k_a_000d0001_peak_2_nligands_400.mat");
+data3 = load("Force_val.k_a_000d0010_peak_1_nligands_400.mat");
+data4 = load("Force_val.k_a_000d0100_peak_1_nligands_400.mat");
 
-  data1 = load("Struct_vals.k_a_000d0000_peak_1_nligands_400.mat");
-  data2 = load("Struct_vals.k_a_000d0000_peak_2_nligands_400.mat");
-  data3 = load("Struct_vals.k_a_000d0001_peak_1_nligands_400.mat");
-  data4 = load("Struct_vals.k_a_000d0001_peak_2_nligands_400.mat");
-  data5 = load("Struct_vals.k_a_000d0010_peak_1_nligands_400.mat");
-  data6 = load("Struct_vals.k_a_000d0010_peak_2_nligands_400.mat");
-  data7 = load("Struct_vals.k_a_000d0100_peak_1_nligands_400.mat");
-  data8 = load("Struct_vals.k_a_000d0100_peak_2_nligands_400.mat");
-  data9 = load("Struct_vals.k_a_000d1000_peak_1_nligands_400.mat");
-  data10 = load("Struct_vals.k_a_000d1000_peak_2_nligands_400.mat");
-  data11 = load("Struct_vals.k_a_001d0000_peak_1_nligands_400.mat");
-  data12 = load("Struct_vals.k_a_001d0000_peak_2_nligands_400.mat");
+time = 8000:9000;
+nem_order_1 = mean(data1.force_mem(time,1:40), 1, 'omitnan')';
+nem_order_2 = mean(data2.force_mem(time,1:40), 1, 'omitnan')';
+nem_order_3 = mean(data3.force_mem(time,1:40), 1, 'omitnan')';
+nem_order_4 = mean(data4.force_mem(time,1:40), 1, 'omitnan')';
+ 
+%Find indices of the 25 lowest points in group 1
+[~, idx_low25] = mink(nem_order_1, 25);
 
-  idx3 = data3.struct>0;
-  struct3 = data3.struct(idx3)-1;
-  idx4 = data4.struct>0;
-  struct4 = data4.struct(idx4)-1;
-  idx5 = data5.struct > 0;
-  struct5 = data5.struct(idx5)-1;
-  idx7 = data7.struct > 0;
-  struct7 = data7.struct(idx7)-1;
+% Select those indices in ALL groups
+nem_order_1 = nem_order_1(idx_low25);
+nem_order_2 = nem_order_2(idx_low25);
+nem_order_3 = nem_order_3(idx_low25);
+nem_order_4 = nem_order_4(idx_low25);
 
+data = {nem_order_1, nem_order_2, nem_order_3, nem_order_4};
 
-  nem = {data1.struct, data2.struct,data3.struct,data4.struct,...
-         data5.struct,data6.struct,data7.struct,data8.struct,...
-         unique(data9.struct),unique(data10.struct),unique(data11.struct),unique(data12.struct)};
+colors = {[0.50 0.50 0.50] [0.90 0.40 0.60] [0.25 0.70 0.70] [0.40 0.20 0.60]};
 
-[Fout,nCells,Ns] = CellArray2PaddedNanArray(nem');
-FH = figure(1); clf
-FH.Color = 'w';
-MarkerSize = 20;
- bh = violinplot(Fout(:, [3,4,5,7]));
-colors = {[0, 0, 0], [1, 0.75, 0.796], [0.678, 0.847, 0.902], [0.502, 0, 0.502]};  % Example colors
-% Loop through each violin and set the color
-for i = 1:length(bh)
-    bh(i).ViolinColor = colors(i);
-    bh(i).ShowData = false;
-    bh(i).ShowMedian = true;
-    bh(i).MedianColor = [1 0.5 0];
-    bh(i).ShowBox = true;
-    bh(i).ShowMean = false;
-    bh(i).ShowNotches = false;
-    bh(i).EdgeColor = [0 0 0];
-    bh(i).ShowWhiskers = true;
-    %bh(i).QuartileStyle = 'shadow';
-    %bh(i).MedianMarkerSize = 48;
-    %bh(i).ViolinAlpha = 1;
-end
- %bh.LineWidth = 3;
-  set(gca, 'box', 'off', 'fontsize', 42, 'LineWidth', 6)
-  xticks([1 2 3 4])
-  %ylim([0 1])
-  set(gca, 'TickLabelInterpreter', 'latex','FontName', 'Arial','FontSize', 45);
-xticklabels({' ', ' ', ' ', ' '});
-xlabel('Substrate rigidity (kPa)', 'FontSize', 55);
-  ylabel({'Ratio of branched F-actin'}, 'FontSize', 45);
-  set(gcf, 'Position',[700 100 800 1000]);
-  exportgraphics(gca,'RatioBranched.png','Resolution',450)
+figure; 
+hold on;
+set(gcf,'Color','w')
+ 
+bh = violinplot(data);
+ 
+for f = 1:length(bh)
+     bh(f).ViolinColor = colors(f);
+     bh(f).ShowData = true;
+     bh(f).ShowMedian = true;
+     bh(f).MedianColor = [1 0.5 0];
+     bh(f).ShowBox = true;
+     bh(f).ShowMean = false;
+     bh(f).ShowNotches = false;
+     bh(f).EdgeColor = [0 0 0];
+     bh(f).ShowWhiskers = true;
+     %bh(i).QuartileStyle = 'shadow';
+     %bh(i).MedianMarkerSize = 48;
+     %bh(i).ViolinAlpha = 1;
+ end
+ set(gca, 'box', 'off', 'fontsize', 25, 'LineWidth', 3)
+ set(gca, 'TickLabelInterpreter', 'latex','FontName', 'Times', 'FontSize', 25);
+ xticks([1 2 3 4])
+ xticklabels({'0.4', '0.4 + Mn^{2+}', '6','60'})
+ ylabel('F_{BR} (pN)')
+ xlabel('Substrate Rigidity (kPa)')
+ box off
+ hold off
