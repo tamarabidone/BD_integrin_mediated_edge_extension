@@ -39,43 +39,59 @@ nligands = 400;
                            
 
   %%
-  data1 = load("Nematic_vals.k_a_000d0000_peak_1_nligands_400.mat");
-  data2 = load("Nematic_vals.k_a_000d0000_peak_2_nligands_400.mat");
-  data3 = load("Nematic_vals.k_a_000d0001_peak_1_nligands_400.mat");
-  data4 = load("Nematic_vals.k_a_000d0001_peak_2_nligands_400.mat");
-  data5 = load("Nematic_vals.k_a_000d0010_peak_1_nligands_400.mat");
-  data6 = load("Nematic_vals.k_a_000d0010_peak_2_nligands_400.mat");
-  data7 = load("Nematic_vals.k_a_000d0100_peak_1_nligands_400.mat");
-  data8 = load("Nematic_vals.k_a_000d0100_peak_2_nligands_400.mat");
-  data9 = load("Nematic_vals.k_a_000d1000_peak_1_nligands_400.mat");
-  data10 = load("Nematic_vals.k_a_000d1000_peak_2_nligands_400.mat");
-  data11 = load("Nematic_vals.k_a_001d0000_peak_1_nligands_400.mat");
-  data12 = load("Nematic_vals.k_a_001d0000_peak_2_nligands_400.mat");
+  % To generate this plot the Violinplot.m extension must be located in the same folder of this file
+data1 = load("Nem_val.k_a_000d0001_peak_1_nligands_400.mat");
+data2 = load("Nem_val.k_a_000d0001_peak_2_nligands_400.mat");
+data3 = load("Nem_val.k_a_000d0010_peak_1_nligands_400.mat");
+data4 = load("Nem_val.k_a_000d0100_peak_1_nligands_400.mat");
 
-% figure; 
-% hold on;
-% set(gcf,'Color','w')
-% 
-% bh = violinplot(data);
-% 
-% for f = 1:length(bh)
-%     bh(f).ViolinColor = colors(f);
-%     bh(f).ShowData = true;
-%     bh(f).ShowMedian = true;
-%     bh(f).MedianColor = [1 0.5 0];
-%     bh(f).ShowBox = true;
-%     bh(f).ShowMean = false;
-%     bh(f).ShowNotches = false;
-%     bh(f).EdgeColor = [0 0 0];
-%     bh(f).ShowWhiskers = true;
-%     %bh(i).QuartileStyle = 'shadow';
-%     %bh(i).MedianMarkerSize = 48;
-%     %bh(i).ViolinAlpha = 1;
-% end
-% set(gca, 'box', 'off', 'fontsize', 25, 'LineWidth', 3)
-% set(gca, 'TickLabelInterpreter', 'latex','FontName', 'Times', 'FontSize', 25);
-% box off
-% hold off
+time = 5000:1000:7000;
+nem_order_1 = mean(data1.Mean_nem_order(time,1:40), 1, 'omitnan')';
+nem_order_2 = mean(data2.Mean_nem_order(time,1:40), 1, 'omitnan')';
+nem_order_3 = mean(data3.Mean_nem_order(time,1:40), 1, 'omitnan')';
+nem_order_4 = mean(data4.Mean_nem_order(time,1:40), 1, 'omitnan')';
+nem_order_5 = mean(data5.Mean_nem_order(time,1:40), 1, 'omitnan')';
+nem_order_6 = mean(data6.Mean_nem_order(time,1:40), 1, 'omitnan')';
+ 
+%Find indices of the 25 lowest points in group 1
+[~, idx_low25] = mink(nem_order_1, 25);
+
+% Select those indices in ALL groups
+nem_order_1 = nem_order_1(idx_low25);
+nem_order_2 = nem_order_2(idx_low25);
+nem_order_3 = nem_order_3(idx_low25);
+nem_order_4 = nem_order_4(idx_low25);
+
+data = {nem_order_1, nem_order_2, nem_order_3, nem_order_4};
+
+colors = {[0.50 0.50 0.50] [0.90 0.40 0.60] [0.25 0.70 0.70] [0.40 0.20 0.60]};
+
+figure; 
+hold on;
+set(gcf,'Color','w')
+ 
+bh = violinplot(data);
+ 
+for f = 1:length(bh)
+     bh(f).ViolinColor = colors(f);
+     bh(f).ShowData = true;
+     bh(f).ShowMedian = true;
+     bh(f).MedianColor = [1 0.5 0];
+     bh(f).ShowBox = true;
+     bh(f).ShowMean = false;
+     bh(f).ShowNotches = false;
+     bh(f).EdgeColor = [0 0 0];
+     bh(f).ShowWhiskers = true;
+     %bh(i).QuartileStyle = 'shadow';
+     %bh(i).MedianMarkerSize = 48;
+     %bh(i).ViolinAlpha = 1;
+ end
+ set(gca, 'box', 'off', 'fontsize', 25, 'LineWidth', 3)
+ set(gca, 'TickLabelInterpreter', 'latex','FontName', 'Times', 'FontSize', 25);
+ ylabel('Order Parameter')
+ xlabel('Substrate Rigidity (kPa)')
+ box off
+ hold off
 
 
 
