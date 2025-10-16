@@ -4,78 +4,80 @@ close all
 
 RawSaveDirectory = ' _____ '; %Insert directory to folder containing raw files here
 
-nRuns = 6;
-nIntegrins = 100;
-k_a =  [0.0001, 0.0001, 0.001, 0.01];
-peak = [1, 2, 1, 1];
+nRuns = 40;
+k_a = [0.0001 0.0001 0.001 0.001 0.01 0.01];
+peak = [1 2 1 2 1 2];
 nligands = 400;
 
-for n = 1:length(k_a)
-             p = peak(n);
-             k = k_a(n);
-             MemPosi = NaN(501,6);
-             Avg = [];
-             for r = 1:nRuns
-                            tic
-                            SaveName = ['SIMULATION-001__','Ka_',SimFormat(k),'__Peak_',sprintf('%02d',p), '__nLigands_',sprintf('%04d',nligands ), '_run_', sprintf('%02d',r), '.mat'];
-                            load(fullfile(RawSaveDirectory, SaveName));
-                            for t = 451:501
-                            MemPosi(t,r) = SimData.MembranePosition(t,1);
-                            end
-             end
-             Avg = mean(MemPosi, 2);
 
-                    SaveName = (['MemPosition.','k_a_', SimFormat(k), '_peak_', num2str(p), '_nligands_', sprintf('%03d', nligands),'.mat']);
-                    Directory = '/Users/remisondaz/Desktop/MATLAB/Histograms';
+    for m = 1:length(k_a) % Create combinations of all conditions
+        p = peak(m);
+        k = k_a(m);
+        MemPos = NaN(40,1);
+
+            for r = 1:nRuns
+                            SaveName = ['SIMULATION-001__','Ka_',SimFormat(k),'__Peak_',sprintf('%02d',p), '__nLigands_',sprintf('%04d',nligands), '_run_', sprintf('%02d',r), '.mat'];
+                            load(fullfile(RawSaveDirectory, SaveName));                         
+                             MemPos(r) = mean(SimData.MembranePosition(8001:9001));
+            end
+                    SaveName = (['Mem_val.','k_a_', SimFormat(k), '_peak_', sprintf('%01d',p), '_nligands_', sprintf('%03d', nligands),'.mat']);
+                    Directory = ' _____ '; %Insert directory to folder containing data files here
                     FullFilePath = fullfile(Directory, SaveName);
-                    save(FullFilePath,  'Avg');
-end
+                    save(FullFilePath,  'MemPos');
+            end
+    %     end
+    % end
   
 %%
 
-  data1 = load("MemPosition.k_a_000d0001_peak_1_nligands_400.mat");
-  data2 = load("MemPosition.k_a_000d0001_peak_2_nligands_400.mat");
-  data3 = load("MemPosition.k_a_000d0010_peak_1_nligands_400.mat");
-  data5 = load("MemPosition.k_a_000d0100_peak_1_nligands_400.mat");
+data1 = load("Mem_val.k_a_000d0001_peak_1_nligands_400.mat");
+data2 = load("Mem_val.k_a_000d0001_peak_2_nligands_400.mat");
+data3 = load("Mem_val.k_a_000d0010_peak_1_nligands_400.mat");
+data4 = load("Mem_val.k_a_000d0100_peak_1_nligands_400.mat");
 
-nem = {data1.Avg,data2.Avg, data3.Avg,data5.Avg};
-% average_over_seconds = @(x) arrayfun(@(i) mean(x(i:min(i+9, numel(x)))), 1:10:numel(x));
-% nem = cellfun(average_over_seconds, nem, 'UniformOutput', false);
-[Fout, nCells, Ns] = CellArray2PaddedNanArray(nem');
-Fout = Fout(:, [1,2,3,4]);
- X = [1 2 3 4];
- Xvals = repmat(X, size(Fout,1),1);
+nem_order_1 = data1.MemPos;
+nem_order_2 = data2.MemPos;
+nem_order_3 = data3.MemPos;
+nem_order_4 = data4.MemPos;
+ 
+%Find indices of the 25 lowest points in group 1
+[~, idx_low25] = maxk(nem_order_1, 25);
 
-FH = figure(1); clf
-FH.Color = 'w';
-MarkerSize = 20;
-%Xlabels = [10e-2,10e-2,10e0,10e0];
-SH1 = swarmchart(Xvals,abs(Fout(:, [1,2,3,4])), '.k', 'SizeData',1,'XJitterWidth',0.5,'CData',0.4*[1,1,1]); hold on
-  bh = boxplot(abs(Fout(:, [1,2,3,4])),'symbol', ' ', 'Notch', 'on');
-  %ylabel('F-actin Flow (nm/s)','FontSize', 40)
-  set(bh,'LineWidth',3)
-  medians = findobj(gca, 'Tag', 'Median');
-  boxes = findobj(gca, 'Tag', 'Box');
-  colors = {[0.753, 0.753, 0.753],[1 0 0],[0.502, 0.502, 0.502],[0.251, 0.251, 0.251]};
-  boxes = findobj(gca, 'Tag', 'Box');
-  boxes = flipud(boxes);
-for i = 1:length(boxes)
-    set(boxes(i), 'LineWidth', 3, 'Color', colors{i}); % Set the outline color
+% Select those indices in ALL groups
+nem_order_1 = nem_order_1(idx_low25);
+nem_order_2 = nem_order_2(idx_low25);
+nem_order_3 = nem_order_3(idx_low25);
+nem_order_4 = nem_order_4(idx_low25);
+
+data = {nem_order_1, nem_order_2, nem_order_3, nem_order_4};
+
+figure;  
+hold on; 
+set(gcf,'Color','w');
+
+wt_color  = [0.4 0.7 1.0];  
+mn_color  = [1.0 0.2 0.2];
+colors = {wt_color, mn_color, wt_color, wt_color};
+
+for i = 1:numel(data)
+    y = data{i};
+    y = y(:);
+    y = y(~isnan(y));
+
+    groupIndex = ceil(i/2);                 
+    condIndex  = mod(i-1,2)+1; 
+    
+    scatter(xVals, y, 60, 'filled', 'MarkerFaceAlpha', 0.6, 'MarkerFaceColor', colors{condIndex})
+
+    med = mean(y);
+    plot([xThis-0.1 xThis+0.1], [med med], 'k-', 'LineWidth', 2)
 end
-for j = 1:length(boxes)
-    % Use patch to set the face to be transparent with colored edges
-    xData = get(boxes(j), 'XData');
-    yData = get(boxes(j), 'YData');
-    patch(xData, yData, colors{j}, 'FaceAlpha', 0.2, 'EdgeColor', colors{j}, 'LineWidth', 3); 
-end
-  % ylim([0 25])
-  %xticks([1 2 3 4 5 6 7 8 9 10])
-  set(gca, 'TickLabelInterpreter', 'latex','FontName', 'Arial');
-xticklabels({'0.4', '$0.4 + Mn^{2+}$','6','60'});
-xlabel('Substrate Rigidity (kPa)','FontSize', 50);
-ylabel('Y-position (nm)', 'FontSize',50);
-set(gca, 'box', 'off', 'fontsize', 42, 'LineWidth', 3)
-set(gcf, 'Position',[700 100 700 1000]);
-hold off
-print('FlowMag.svg', '-dsvg', '-r400');
-exportgraphics(gca,'FlowMag.svg','Resolution',350)
+
+xticklabels({'0.4', '0.4 + Mn^{2+}', '6', '60'})  
+ylabel('Y-position (nm)')
+xlabel('Substrate Rigidity (kPa)')
+set(gca, 'FontSize', 20, 'LineWidth', 2, 'box', 'off')
+
+h1 = scatter(nan, nan, 60, 'filled', 'MarkerFaceColor', wt_color, 'MarkerFaceAlpha',0.6);
+h2 = scatter(nan, nan, 60, 'filled', 'MarkerFaceColor', mn_color, 'MarkerFaceAlpha',0.6);
+legend([h1 h2], {'WT', 'Mn^{2+}'}, 'Location','best', 'Box','off')
