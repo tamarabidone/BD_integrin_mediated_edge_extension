@@ -1,0 +1,51 @@
+{Error using LamellipodiumModel_Bidone01
+Unable to find file or directory
+'/uufs/chpc.utah.edu/common/home/bidone-group3/Remi/Simulations_V1_DifferentClutch/Reduced_flow/TempSaveFolder_SIMULATION-001__Ks_000d0010__ExpLife_03__ReducedFlow_false_run_01.mat/SIMULATION-001__Ks_000d0010__ExpLife_03__ReducedFlow_false_run_01_n0028.mat'.
+
+Error in Reducedflow (line 39)
+parfor idx = 1:size(values,1)
+} 
+{Error using LamellipodiumModel_Bidone01
+/uufs/chpc.utah.edu/common/home/bidone-group3/Remi/Simulations_V1_DifferentClutch/Reduced_flow/TempSaveFolder_SIMULATION-001__Ks_000d0001__ExpLife_02__ReducedFlow_false_run_05.mat
+is not a directory.
+
+Error in Reducedflow (line 39)
+parfor idx = 1:size(values,1)
+} 
+{Error using LamellipodiumModel_Bidone01
+/uufs/chpc.utah.edu/common/home/bidone-group3/Remi/Simulations_V1_DifferentClutch/Reduced_flow/TempSaveFolder_SIMULATION-001__Ks_000d0001__ExpLife_03__ReducedFlow_false_run_03.mat
+is not a directory.
+
+Error in Reducedflow (line 39)
+parfor idx = 1:size(values,1)
+} 
+{Error using LamellipodiumModel_Bidone01
+Cannot create
+'SIMULATION-001__Ks_000d0001__ExpLife_01__ReducedFlow_true_run_01_n0028.mat'
+because
+'/uufs/chpc.utah.edu/common/home/bidone-group3/Remi/Simulations_V1_DifferentClutch/Reduced_flow/TempSaveFolder_SIMULATION-001__Ks_000d0001__ExpLife_01__ReducedFlow_true_run_01.mat'
+does not exist.
+
+Error in Reducedflow (line 39)
+parfor idx = 1:size(values,1)
+} 
+{Error using LamellipodiumModel_Bidone01
+Cannot create
+'SIMULATION-001__Ks_000d0100__ExpLife_03__ReducedFlow_false_run_03_n0026.mat'
+because
+'/uufs/chpc.utah.edu/common/home/bidone-group3/Remi/Simulations_V1_DifferentClutch/Reduced_flow/TempSaveFolder_SIMULATION-001__Ks_000d0100__ExpLife_03__ReducedFlow_false_run_03.mat'
+does not exist.
+
+Error in Reducedflow (line 39)
+parfor idx = 1:size(values,1)
+} 
+{Error using LamellipodiumModel_Bidone01
+Cannot create
+'SIMULATION-001__Ks_000d0100__ExpLife_01__ReducedFlow_true_run_06_n0030.mat'
+because
+'/uufs/chpc.utah.edu/common/home/bidone-group3/Remi/Simulations_V1_DifferentClutch/Reduced_flow/TempSaveFolder_SIMULATION-001__Ks_000d0100__ExpLife_01__ReducedFlow_true_run_06.mat'
+does not exist.
+
+Error in Reducedflow (line 39)
+parfor idx = 1:size(values,1)
+} 
