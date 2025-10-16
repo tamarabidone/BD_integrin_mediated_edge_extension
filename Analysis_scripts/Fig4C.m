@@ -53,8 +53,6 @@ nem_order_1 = mean(data1.Mean_nem_order(time,1:40), 1, 'omitnan')';
 nem_order_2 = mean(data2.Mean_nem_order(time,1:40), 1, 'omitnan')';
 nem_order_3 = mean(data3.Mean_nem_order(time,1:40), 1, 'omitnan')';
 nem_order_4 = mean(data4.Mean_nem_order(time,1:40), 1, 'omitnan')';
-nem_order_5 = mean(data5.Mean_nem_order(time,1:40), 1, 'omitnan')';
-nem_order_6 = mean(data6.Mean_nem_order(time,1:40), 1, 'omitnan')';
  
 %Find indices of the 25 lowest points in group 1
 [~, idx_low25] = mink(nem_order_1, 25);
