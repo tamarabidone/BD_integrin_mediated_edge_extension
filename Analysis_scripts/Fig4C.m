@@ -91,6 +91,8 @@ for f = 1:length(bh)
  end
  set(gca, 'box', 'off', 'fontsize', 25, 'LineWidth', 3)
  set(gca, 'TickLabelInterpreter', 'latex','FontName', 'Times', 'FontSize', 25);
+ xticks([1 2 3 4])
+ xticklabels({'0.4', '0.4 + Mn^{2+}', '6','60'})
  ylabel('Order Parameter')
  xlabel('Substrate Rigidity (kPa)')
  box off
